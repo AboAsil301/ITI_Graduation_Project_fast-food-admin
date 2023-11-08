@@ -34,25 +34,25 @@ const SideBar = ({ isOpen, toggle }) => {
       </div>
       <div className="side-menu">
         <Link to="/panel/dashboard">
-          <img src={dashboardIcon} alt="menu.dashboard" />{" "}
-          dashboard
+          <img src={dashboardIcon} alt="Dashboard" />
+          Dashboard
         </Link>
         <Link to="/panel/products">
-          <img src={productIcon} alt="menu.products" />{" "}
-          products
+          <img src={productIcon} alt="Products" />
+          Products
         </Link>
         <Link to="/panel/category">
-          <img src={categoryIcon} alt="menu.category" />{" "}
-          category
+          <img src={categoryIcon} alt="Category" />
+          Category
         </Link>
         <Link to="/panel/orders">
-          <img src={orderIcon} alt="menu.orders" /> orders
+          <img src={orderIcon} alt="Orders" />Orders
         </Link>
         <Link to="/panel/offer">
-          <img src={offerIcon} alt="menu.offers"/> offers
+          <img src={offerIcon} alt="Offers"/>Offers
         </Link>
         <button onClick={() => logoutUser()}>
-          <img src={logoutIcon} alt="menu.logout" />logout
+          <img src={logoutIcon} alt="Logout" />Logout
         </button>
       </div>
 

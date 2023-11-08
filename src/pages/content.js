@@ -5,6 +5,8 @@ import { Route, Routes } from "react-router-dom";
 import Header from "./Header";
 import Page404 from "./404";
 import Login from "./Login";
+import Category from "./Category";
+
 
 const Content = ({ sidebarIsOpen, toggleSidebar }) => {
   return (
@@ -18,6 +20,7 @@ const Content = ({ sidebarIsOpen, toggleSidebar }) => {
         
         <Route path="*" element={<Page404 />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/panel/category" element={<Category />} />
       </Routes>
     </Container>
   );

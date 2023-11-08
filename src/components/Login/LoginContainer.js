@@ -32,24 +32,24 @@ const LoginContainer = () => {
     validate: (values) => {
       let errors = {};
       if (!values.userName) {
-        errors.userName = "nameRequired";
+        errors.userName = "Username is required";
       }
       if (!values.password) {
-        errors.password = "passwordRequired";
+        errors.password = "Password is required";
       }
       if (values.password.length < 8) {
-        errors.password = "passwordLength";
+        errors.password = "Password must be longer than 8 character";
       }
       return errors;
     },
     onSubmit: (values) => {
       if (values.userName !== state.loginSlice.user.userName) {
-        toast.error("nameError", {
+        toast.error("Username is wrong", {
           autoClose: 2000,
           pauseOnHover: true,
         });
       } else if (values.password !== state.loginSlice.user.password) {
-        toast.error("passwordError", {
+        toast.error("Password is wrong", {
           autoClose: 2000,
           pauseOnHover: true,
         });
@@ -67,33 +67,33 @@ const LoginContainer = () => {
       </LogoDiv>
       <LoginDiv>
         <LoginForm>
-          <WelcomeText>welcome</WelcomeText>
+          <WelcomeText>Welcome Admin</WelcomeText>
           <SignInForm onSubmit={formik.handleSubmit}>
             <SignInput
-              placeholder="username"
+              placeholder="Username"
               id="userName"
               name="userName"
               type="text"
               onChange={formik.handleChange}
               value={formik.values.userName}
             />
-            <i>username: admin</i>
+            {/* <i>username: admin</i> */}
             {formik.errors.userName && (
               <ErrorText>{formik.errors.userName}</ErrorText>
             )}
             <SignInput
-              placeholder="password"
+              placeholder="Password"
               id="password"
               name="password"
               type="password"
               onChange={formik.handleChange}
               value={formik.values.password}
             />
-            <i>password: 12345678</i>
+            {/* <i>password: 12345678</i> */}
             {formik.errors.password && (
               <ErrorText>{formik.errors.password}</ErrorText>
             )}
-            <SignBtn type="submit">sign-in</SignBtn>
+            <SignBtn type="submit">Sign In</SignBtn>
           </SignInForm>
         </LoginForm>
         <LoginImage>
