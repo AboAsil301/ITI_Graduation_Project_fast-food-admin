@@ -49,13 +49,13 @@ export const OfferModal = (props) => {
     validate: (values) => {
       let errors = {};
       if (!values.image) {
-        errors.image = ("form.image-required");
+        errors.image = "Image is required";
       }
       if (!values.title) {
-        errors.title = ("form.title-required");
+        errors.title = "Title is required";
       }
       if (!values.description) {
-        errors.description = ("form.description-required");
+        errors.description = "Description is required";
       }
       return errors;
     },
@@ -73,7 +73,7 @@ export const OfferModal = (props) => {
           dispatch(setOffers(newArray));
         })
         .catch(() => { });
-      toast.success(("form.added"), {
+      toast.success("Successfully added", {
         autoClose: 1000,
         pauseOnHover: true,
       });
@@ -86,7 +86,7 @@ export const OfferModal = (props) => {
       <form onSubmit={formik.handleSubmit}>
         <ImageDiv>
           <ImageTitle>
-            <ImageTitleText>{("form.upload-img")}</ImageTitleText>
+            <ImageTitleText>{"Upload image"}</ImageTitleText>
             {file ? <ImagePreview src={file} alt="preview" /> : ""}
           </ImageTitle>
 
@@ -99,7 +99,7 @@ export const OfferModal = (props) => {
             />
             <ImageIconSection>
               <img src={UploadIcon} alt="upload" />
-              <ImageSpan>{("form.upload")}</ImageSpan>
+              <ImageSpan>{"upload"}</ImageSpan>
             </ImageIconSection>
             {formik.errors.image && (
               <ImageText>{formik.errors.image}</ImageText>
@@ -107,9 +107,9 @@ export const OfferModal = (props) => {
           </ImageUpload>
         </ImageDiv>
         <DataDiv>
-          <DataTitle>{("form.offer title")}</DataTitle>
+          <DataTitle>{"Add your Offer information"}</DataTitle>
           <AddData>
-            <DataLabel>{("form.title")}</DataLabel>
+            <DataLabel>{"Add your necessary information"}</DataLabel>
             <DataInput
               placeholder="Soup"
               id="title"
@@ -119,7 +119,7 @@ export const OfferModal = (props) => {
               value={formik.values.title || ""}
             />
             {formik.errors.title && <ErrorText>{formik.errors.title}</ErrorText>}
-            <DataLabel>{("form.description")}</DataLabel>
+            <DataLabel>{("Description")}</DataLabel>
             <DataInput
               placeholder="description"
               id="description"
@@ -136,9 +136,9 @@ export const OfferModal = (props) => {
 
         <BtnDiv>
           <CancelBtn type="button" onClick={() => props.closeFunc()}>
-            {("cancel").charAt(0).toUpperCase() + ("cancel").slice(1)}
+            Cancel
           </CancelBtn>
-          <CreateBtn type="submit">{("form." + props.createname)}</CreateBtn>
+          <CreateBtn type="submit">Create offer</CreateBtn>
         </BtnDiv>
       </form>
       <ToastContainer />
