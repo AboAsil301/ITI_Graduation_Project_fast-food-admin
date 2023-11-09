@@ -9,6 +9,8 @@ import Category from "./Category";
 import Products from "./Products";
 import Orders from "./Orders";
 import Offer from "./Offer";
+import Dashboard from "./Dashboard";
+
 
 
 
@@ -30,6 +32,8 @@ const Content = ({ sidebarIsOpen, toggleSidebar }) => {
         <Route path="/panel/products" element={<Products />} />
         <Route path="/panel/orders" element={<Orders />} />
         <Route path="/panel/offer" element={<Offer />} />
+        <Route path="/panel/dashboard" element={<Dashboard />} />
+        
 
 
       </Routes>

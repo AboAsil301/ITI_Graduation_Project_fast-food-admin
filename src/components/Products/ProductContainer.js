@@ -18,12 +18,9 @@ import Swal from "sweetalert2";
 import { ToastContainer, toast } from "react-toastify";
 import DeleteIcon from "../../Image/icon/delete.svg";
 import {
-  Box,
   CardContent,
   Grid,
-  MenuItem,
   Pagination,
-  Select,
   Typography,
 } from "@mui/material";
 import { productsAPI, productsDeleteAPI } from "../../api/products";
@@ -31,7 +28,6 @@ import { Stack } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "../../store/slice/productsSlice";
 import SelectCategory from "./SelectCategory";
-import { categoryAPI } from "../../api/category";
 
 export default function ProductContainer() {
 
@@ -40,7 +36,7 @@ export default function ProductContainer() {
 
   React.useEffect(() => {
     getProduct();
-  }, []);
+  });
 
   const getProduct = () => {
     productsAPI
@@ -77,17 +73,17 @@ export default function ProductContainer() {
     });
   };
 
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [page, ] = React.useState(0);
+  // const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+  // const handleChangePage = (event, newPage) => {
+  //   setPage(newPage);
+  // };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  // const handleChangeRowsPerPage = (event) => {
+  //   setRowsPerPage(+event.target.value);
+  //   setPage(0);
+  // };
 
   if (!state.productsSlice.data[0]) {
     return <LoadingImage src={LoadGif} alt="loading" />;
