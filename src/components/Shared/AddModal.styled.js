@@ -90,7 +90,8 @@ export const ImageSpan = styled.span`
 
 export const DataDiv = styled.div`
   display: flex;
-  margin-top: 50px;
+  margin-top: 25px;
+  margin-bottom: 25px;
   @media (max-width: 992px) {
     display: block;
   }

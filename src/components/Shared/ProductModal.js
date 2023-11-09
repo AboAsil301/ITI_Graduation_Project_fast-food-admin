@@ -28,11 +28,26 @@ import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "../../store/slice/productsSlice";
 import { ToastContainer, toast } from "react-toastify";
+import { categoryAPI } from '../../api/category/index';
+
 
 export const ProductModal = (props) => {
   const [file, setFile] = React.useState();
 
 
+  const [category, setCategory] = React.useState(null);
+
+  React.useEffect(() => {
+    getCategory();
+  });
+
+  const getCategory = () => {
+    categoryAPI
+      .then((res) => {
+        setCategory(res.data.category);
+      })
+      .catch((err) => {});
+  };
 
   function handleChange(e) {
     setFile(URL.createObjectURL(e.target.files[0]));
@@ -50,25 +65,27 @@ export const ProductModal = (props) => {
       name: "",
       description: "",
       price: "",
-      restaurants: "",
+      category: "",
+
     },
     validate: (values) => {
       let errors = {};
       if (!values.image) {
-        errors.image = ("form.image-required");
+        errors.image = "Image is required";
       }
       if (!values.name) {
-        errors.name = ("form.name-required");
+        errors.name = "Name is required";
       }
       if (!values.description) {
-        errors.description = ("form.description-required");
+        errors.description = "Description is required";
       }
       if (!values.price) {
-        errors.price = ("form.price-required");
+        errors.price ="Price is required";
       }
-      if (!values.restaurants) {
-        errors.restaurants = ("form.restaurants-required");
+      if (!values.category) {
+        errors.category ="Category is required";
       }
+      
       return errors;
     },
     onSubmit: (values) => {
@@ -80,7 +97,7 @@ export const ProductModal = (props) => {
         product_name: values.name,
         description: values.description,
         product_price: values.price,
-        restaurant_name: values.restaurants,
+        category: values.category,
       };
       productsCreateAPI(item)
         .then((res) => {
@@ -88,7 +105,7 @@ export const ProductModal = (props) => {
           dispatch(setProducts(newArray));
         })
         .catch(() => { });
-      toast.success(("form.added"), {
+      toast.success(("Successfully added"), {
         autoClose: 1000,
         pauseOnHover: true,
       });
@@ -101,7 +118,7 @@ export const ProductModal = (props) => {
       <form onSubmit={formik.handleSubmit}>
         <ImageDiv>
           <ImageTitle>
-            <ImageTitleText>{("form.upload-img")}</ImageTitleText>
+            <ImageTitleText>{("Upload image")}</ImageTitleText>
             {file ? <ImagePreview src={file} alt="preview" /> : ""}
           </ImageTitle>
 
@@ -114,18 +131,18 @@ export const ProductModal = (props) => {
             />
             <ImageIconSection>
               <img src={UploadIcon} alt="upload" />
-              <ImageSpan>{("form.upload")}</ImageSpan>
+              <ImageSpan>{("upload")}</ImageSpan>
             </ImageIconSection>
             {formik.errors.image && (
               <ImageText>{formik.errors.image}</ImageText>
             )}
           </ImageUpload>
         </ImageDiv>
-        <DataDiv>
-          <DataTitle>{("form.product title")}</DataTitle>
+        <DataDiv >
+          <DataTitle>Add your Product description and necessary information</DataTitle>
           <AddData>
             <DataScroll>
-              <DataLabel>{("form.name")}</DataLabel>
+              <DataLabel>Name</DataLabel>
               <DataInput
                 placeholder="Soup"
                 id="name"
@@ -135,7 +152,7 @@ export const ProductModal = (props) => {
                 value={formik.values.name || ""}
               />
               {formik.errors.name && <ErrorText>{formik.errors.name}</ErrorText>}
-              <DataLabel>{("form.description")}</DataLabel>
+              <DataLabel>Description</DataLabel>
               <DataInput
                 placeholder="description"
                 id="description"
@@ -147,7 +164,7 @@ export const ProductModal = (props) => {
               {formik.errors.description && (
                 <ErrorText>{formik.errors.description}</ErrorText>
               )}
-              <DataLabel>{("form.price")}</DataLabel>
+              <DataLabel>Price</DataLabel>
               <DataInput
                 placeholder="price"
                 id="price"
@@ -159,39 +176,39 @@ export const ProductModal = (props) => {
               {formik.errors.price && (
                 <ErrorText>{formik.errors.price}</ErrorText>
               )}
-              <DataLabel>{("form.restaurants")}</DataLabel>
+              <DataLabel>Category</DataLabel>
               <DataSelect
-                placeholder="restaurants"
-                id="restaurants"
-                name="restaurants"
+                placeholder="category"
+                id="category"
+                name="category"
                 type="textarea"
                 onChange={formik.handleChange}
-                value={formik.values.restaurants || ""}
+                value={formik.values.category || ""}
               >
-                {restaurants?.map((restaurant) => {
+                {category?.map((category) => {
                   return (
                     <option
-                      value={restaurant.restaurant_name}
-                      key={restaurant.id}
+                      value={category.name}
+                      key={category.id}
                     >
-                      {restaurant.restaurant_name}
+                      {category.name}
                     </option>
                   );
                 })}
                 )
               </DataSelect>
-              {formik.errors.restaurants && (
-                <ErrorText>{formik.errors.restaurants}</ErrorText>
+              {formik.errors.category && (
+                <ErrorText>{formik.errors.category}</ErrorText>
               )}
             </DataScroll>
           </AddData>
         </DataDiv>
 
-        <BtnDiv>
+        <BtnDiv className="mt-3">
           <CancelBtn type="button" onClick={() => props.closeFunc()}>
-            {("cancel").charAt(0).toUpperCase() + ("cancel").slice(1)}
+           Cancel
           </CancelBtn>
-          <CreateBtn type="submit">{("form." + props.createname)}</CreateBtn>
+          <CreateBtn type="submit">Create product</CreateBtn>
         </BtnDiv>
       </form>
       <ToastContainer />

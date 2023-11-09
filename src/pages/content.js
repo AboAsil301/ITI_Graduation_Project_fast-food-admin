@@ -6,6 +6,8 @@ import Header from "./Header";
 import Page404 from "./404";
 import Login from "./Login";
 import Category from "./Category";
+import Products from "./Products";
+
 
 
 const Content = ({ sidebarIsOpen, toggleSidebar }) => {
@@ -21,6 +23,8 @@ const Content = ({ sidebarIsOpen, toggleSidebar }) => {
         <Route path="*" element={<Page404 />} />
         <Route path="/login" element={<Login />} />
         <Route path="/panel/category" element={<Category />} />
+        <Route path="/panel/products" element={<Products />} />
+
       </Routes>
     </Container>
   );
