@@ -7,6 +7,8 @@ import Page404 from "./404";
 import Login from "./Login";
 import Category from "./Category";
 import Products from "./Products";
+import Orders from "./Orders";
+
 
 
 
@@ -24,6 +26,8 @@ const Content = ({ sidebarIsOpen, toggleSidebar }) => {
         <Route path="/login" element={<Login />} />
         <Route path="/panel/category" element={<Category />} />
         <Route path="/panel/products" element={<Products />} />
+        <Route path="/panel/orders" element={<Orders />} />
+
 
       </Routes>
     </Container>
