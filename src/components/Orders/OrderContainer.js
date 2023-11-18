@@ -7,71 +7,35 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import {
-  DeleteImage,
   LoadingImage,
   OrdersDiv,
   OrdersSpan,
   OrdersStyled,
   TablePaginationStyle,
 } from "./OrderContainer.styled";
-import { Image } from "react-bootstrap";
-import DeleteIcon from "../../Image/icon/delete.svg";
 import LoadGif from "../../Image/icon/loading.gif";
-import Swal from "sweetalert2";
-import { ToastContainer, toast } from "react-toastify";
-import { ordersAPI } from "../../api/orders";
-import { ordersDeleteAPI } from "../../api/orders";
-
-const columns = [
-  { id: "id", label: "id", minWidth: 100, align: "center" },
-  { id: "customer_id", label: "customer_id", minWidth: 100, align: "center" },
-  { id: "date", label: "date", minWidth: 170, align: "center" },
-  { id: "address", label: "address", minWidth: 170, align: "center" },
-  { id: "amount", label: "amount", minWidth: 170, align: "center" },
-  { id: "payment", label: "payment", minWidth: 170, align: "center" },
-  { id: "contact", label: "contact", minWidth: 170, align: "center" },
-];
 
 export default function OrderContainer() {
-
   const [orders, setOrders] = React.useState(null);
 
-  React.useEffect(() => {
-    getOrders();
-  }, []);
-
-  const getOrders = () => {
-    ordersAPI
-      .then((res) => {
-        setOrders(res.data.orders);
-      })
-      .catch((err) => {});
-  };
-
-  const deleteOrders = (id) => {
-    Swal.fire({
-      title: "Are you sure it’s deleted ?",
-      text: "Attention! If you delete this order, it will not come back...?",
-      showCancelButton: true,
-      cancelButtonColor: "transparent",
-      cancelButtonText: "Cancel",
-      confirmButtonColor: "#D63626",
-      confirmButtonText: "Delete",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        ordersDeleteAPI(id)
-          .then((res) => {
-            let newArray = [...orders].filter((item) => item.id !== id);
-            setOrders(newArray);
-          })
-          .catch(() => {});
-        toast.success("The operation is successful!", {
-          autoClose: 1000,
-          pauseOnHover: true,
-        });
+  const fetchOrder = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/orders/orders/");
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    });
+
+      const data = await response.json();
+      const orderedOrders = data.filter((order) => order.ordered === true);
+      setOrders(orderedOrders);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
   };
+
+  React.useEffect(() => {
+    fetchOrder();
+  }, []);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -100,58 +64,104 @@ export default function OrderContainer() {
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
-                {columns?.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    cellwidth={column.minWidth}
-                  >
-                    {column.label.toUpperCase()}
-                  </TableCell>
-                ))}
-                <TableCell align={"right"} cellwidth={"20"}></TableCell>
+                <TableCell align="center" style={{ padding: 0 }}>
+                  Order ID
+                </TableCell>
+                <TableCell align="center" style={{ padding: 0 }}>
+                  Total Price
+                </TableCell>
+                <TableCell align="center" style={{ padding: 0 }}>
+                  Ordered Date
+                </TableCell>
+                <TableCell align="center" style={{ padding: 0 }}>
+                  Status
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {orders
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                  return (
+                .map((row, index) => (
+                  <React.Fragment key={`table-${row.id}`}>
                     <TableRow
                       hover
-                      role="checkbox"
                       tabIndex={-1}
-                      key={`table-${row.id}`}
+                      style={{
+                        backgroundColor: "#e9d5c6",
+                      }}
                     >
-                      {columns.map((column) => {
-                        const value = row[column.id];
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.id === "image" ? (
-                              <Image
-                                width="60"
-                                className="rounded"
-                                alt={column.id}
-                                src={value}
-                              />
-                            ) : value.length > 30 ? (
-                              `${value.slice(0, 30)}...`
-                            ) : (
-                              value
-                            )}
-                          </TableCell>
-                        );
-                      })}
-
-                      <TableCell key={row.id} align={"right"}>
-                        <DeleteImage
-                          onClick={() => deleteOrders(row.id)}
-                          src={DeleteIcon}
-                        />
+                      <TableCell align="center" style={{ padding: 0 }}>
+                        {row.id}
+                      </TableCell>
+                      <TableCell align="center" style={{ padding: 0 }}>
+                        {row.total_price}
+                      </TableCell>
+                      <TableCell align="center" style={{ padding: 0 }}>
+                        {new Date(row.creating_date).toLocaleString()}
+                      </TableCell>
+                      <TableCell align="center" style={{ padding: 0 }}>
+                        {row.status}
                       </TableCell>
                     </TableRow>
-                  );
-                })}
+                    <TableRow>
+                      <TableCell colSpan={4}>
+                        <Table size="small">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell
+                                align="center"
+                                style={{ padding: 0, borderBottom: "none" }}
+                              >
+                                Product Name
+                              </TableCell>
+                              <TableCell
+                                align="center"
+                                style={{ padding: 0, borderBottom: "none" }}
+                              >
+                                Price
+                              </TableCell>
+                              <TableCell
+                                align="center"
+                                style={{ padding: 0, borderBottom: "none" }}
+                              >
+                                Quantity
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {row.orderItems.map((item, itemIndex) => (
+                              <TableRow
+                                key={`table-item-${item.id}`}
+                                style={{
+                                  backgroundColor: "#f9f9f9",
+                                }}
+                              >
+                                <TableCell
+                                  align="center"
+                                  style={{ padding: 0, borderBottom: "none" }}
+                                >
+                                  {item.product.name}
+                                </TableCell>
+                                <TableCell
+                                  align="center"
+                                  style={{ padding: 0, borderBottom: "none" }}
+                                >
+                                  {item.product.price}
+                                </TableCell>
+                                <TableCell
+                                  align="center"
+                                  style={{ padding: 0, borderBottom: "none" }}
+                                >
+                                  {item.quantity}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableCell>
+                    </TableRow>
+                  </React.Fragment>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -165,7 +175,6 @@ export default function OrderContainer() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <ToastContainer />
     </OrdersStyled>
   );
 }
