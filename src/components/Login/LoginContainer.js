@@ -1,62 +1,81 @@
+import React from "react";
 import "react-toastify/dist/ReactToastify.css";
 import loginImg from "../../Image/components/login.avif";
 import logoImg from "../../Image/logo/logo.svg";
 import { ToastContainer, toast } from "react-toastify";
 import { useFormik } from "formik";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setLogin } from "../../store/slice/loginSlice";
 import { useNavigate } from "react-router-dom";
+
+// Import your custom components here
 import {
-  LoginForm,
-  LoginImage,
+  LoginSection,
   LogoDiv,
   LoginDiv,
+  LoginForm,
   WelcomeText,
   SignInForm,
   SignInput,
   SignBtn,
   ErrorText,
-  LoginSection,
+  LoginImage,
 } from "./LoginContainer.styled.js";
-
 const LoginContainer = () => {
-  const state = useSelector((state) => state);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
-      userName: "",
+      email: "",
       password: "",
     },
     validate: (values) => {
       let errors = {};
-      if (!values.userName) {
-        errors.userName = "Username is required";
+      if (!values.email) {
+        errors.email = "Email is required";
       }
       if (!values.password) {
         errors.password = "Password is required";
       }
-      if (values.password.length < 8) {
-        errors.password = "Password must be longer than 8 character";
-      }
       return errors;
     },
-    onSubmit: (values) => {
-      if (values.userName !== state.loginSlice.user.userName) {
-        toast.error("Username is wrong", {
+    onSubmit: async (values) => {
+      try {
+        const response = await fetch(
+          "http://localhost:8000/api/accounts/staff_login/",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              email: values.email,
+              password: values.password,
+            }),
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem("id", data.user.id);
+          localStorage.setItem("access", data.access);
+          localStorage.setItem("refresh", data.refresh);
+          dispatch(setLogin(true));
+          navigate("/"); // Update the redirect path if needed
+        } else {
+          toast.error("Invalid email or password", {
+            autoClose: 2000,
+            pauseOnHover: true,
+          });
+        }
+      } catch (error) {
+        console.error("An error occurred during login:", error);
+        toast.error("An error occurred during login. Please try again later.", {
           autoClose: 2000,
           pauseOnHover: true,
         });
-      } else if (values.password !== state.loginSlice.user.password) {
-        toast.error("Password is wrong", {
-          autoClose: 2000,
-          pauseOnHover: true,
-        });
-      } else {
-        localStorage.setItem("isLogin", true);
-        dispatch(setLogin(true));
-        navigate("/panel/dashboard");
       }
     },
   });
@@ -70,16 +89,15 @@ const LoginContainer = () => {
           <WelcomeText>Welcome Admin</WelcomeText>
           <SignInForm onSubmit={formik.handleSubmit}>
             <SignInput
-              placeholder="Username"
-              id="userName"
-              name="userName"
+              placeholder="Email"
+              id="email"
+              name="email"
               type="text"
               onChange={formik.handleChange}
-              value={formik.values.userName}
+              value={formik.values.email}
             />
-            {/* <i>username: admin</i> */}
-            {formik.errors.userName && (
-              <ErrorText>{formik.errors.userName}</ErrorText>
+            {formik.errors.email && (
+              <ErrorText>{formik.errors.email}</ErrorText>
             )}
             <SignInput
               placeholder="Password"
@@ -89,7 +107,6 @@ const LoginContainer = () => {
               onChange={formik.handleChange}
               value={formik.values.password}
             />
-            {/* <i>password: 12345678</i> */}
             {formik.errors.password && (
               <ErrorText>{formik.errors.password}</ErrorText>
             )}
@@ -98,12 +115,10 @@ const LoginContainer = () => {
         </LoginForm>
         <LoginImage>
           <img src={loginImg} alt="loginImg" />
-          
         </LoginImage>
       </LoginDiv>
       <ToastContainer />
     </LoginSection>
   );
 };
-
 export default LoginContainer;
