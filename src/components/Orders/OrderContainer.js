@@ -14,6 +14,8 @@ import {
   TablePaginationStyle,
 } from "./OrderContainer.styled";
 import LoadGif from "../../Image/icon/loading.gif";
+import { Dropdown } from "react-bootstrap";
+import Swal from "sweetalert2";
 
 export default function OrderContainer() {
   const [orders, setOrders] = React.useState(null);
@@ -43,6 +45,48 @@ export default function OrderContainer() {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+  const updateOrderStatus = async (orderId, newStatus) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/orders/orders/${orderId}/`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: newStatus,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      // Handle successful response
+      const responseData = await response.json();
+
+      // Display SweetAlert on success
+      Swal.fire({
+        icon: "success",
+        title: "Order Status Updated",
+        text: `Order ${orderId} status has been updated to ${responseData.status}.`,
+      });
+
+      console.log("Order status updated successfully:", responseData);
+    } catch (error) {
+      // Handle error
+      console.error("Error updating order status:", error);
+
+      // Display SweetAlert on error
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "An error occurred while updating the order status.",
+      });
+    }
+  };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
@@ -52,6 +96,15 @@ export default function OrderContainer() {
   if (!orders) {
     return <LoadingImage src={LoadGif} alt="loading" />;
   }
+  const handleChange = (orderId, newStatus) => {
+    setOrders((prevOrders) =>
+      prevOrders.map((prevOrder) =>
+        prevOrder.id === orderId
+          ? { ...prevOrder, status: newStatus }
+          : prevOrder
+      )
+    );
+  };
 
   return (
     <OrdersStyled className="category-page">
@@ -83,13 +136,7 @@ export default function OrderContainer() {
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => (
                   <React.Fragment key={`table-${row.id}`}>
-                    <TableRow
-                      hover
-                      tabIndex={-1}
-                      style={{
-                        backgroundColor: "#e9d5c6",
-                      }}
-                    >
+                    <TableRow hover tabIndex={-1} className="bg-info">
                       <TableCell align="center" style={{ padding: 0 }}>
                         {row.id}
                       </TableCell>
@@ -100,7 +147,40 @@ export default function OrderContainer() {
                         {new Date(row.creating_date).toLocaleString()}
                       </TableCell>
                       <TableCell align="center" style={{ padding: 0 }}>
-                        {row.status}
+                        <Dropdown
+                          onSelect={(newStatus) => {
+                            updateOrderStatus(row.id, newStatus);
+                            handleChange(row.id, newStatus);
+                          }}
+                        >
+                          <Dropdown.Toggle
+                            variant="danger"
+                            id={`dropdown-${row.id}`}
+                          >
+                            {row.status}
+                          </Dropdown.Toggle>
+
+                          <Dropdown.Menu class>
+                            <Dropdown.Item
+                              eventKey="Pending"
+                              active={row.status === "Pending"}
+                            >
+                              Pending
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              eventKey="In Progress"
+                              active={row.status === "In Progress"}
+                            >
+                              In Progress
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              eventKey="Out for Delivery"
+                              active={row.status === "Out for Delivery"}
+                            >
+                              Out for Delivery
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
                       </TableCell>
                     </TableRow>
                     <TableRow>
@@ -132,9 +212,7 @@ export default function OrderContainer() {
                             {row.orderItems.map((item, itemIndex) => (
                               <TableRow
                                 key={`table-item-${item.id}`}
-                                style={{
-                                  backgroundColor: "#f9f9f9",
-                                }}
+                                className="border"
                               >
                                 <TableCell
                                   align="center"
