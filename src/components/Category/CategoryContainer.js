@@ -77,6 +77,9 @@ export default function CategoryContainer() {
     });
   };
 
+
+  
+
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -125,18 +128,18 @@ export default function CategoryContainer() {
             <TableBody>
               {state.categorySlice.data
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
+                .map((row, index) => {
                   return (
                     <TableRow
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      key={`table-${row.id}`}
+                      key={`table-row-${row.id}`}
                     >
                       {columns.map((column) => {
                         const value = row[column.id];
                         return (
-                          <TableCell key={column.id} align={column.align}>
+                          <TableCell key={`table-cell-${column.id}`} align={column.align}>
                             {column.id === "image" ? (
                               <Image
                                 width="60"
@@ -152,7 +155,7 @@ export default function CategoryContainer() {
                           </TableCell>
                         );
                       })}
-                      <TableCell key={row.id} align={"center"}>
+                      <TableCell key={`update-${row.id}`} align={"center"}>
                         <UpdateImage
                           onClick={() => deleteCateory(row.id)}
                           src={UpdateIcon}
@@ -161,7 +164,7 @@ export default function CategoryContainer() {
                         />
                       </TableCell>
 
-                      <TableCell key={row.id} align={"center"}>
+                      <TableCell key={`delete-${row.id}`} align={"center"}>
                         <DeleteImage
                           onClick={() => deleteCateory(row.id)}
                           src={DeleteIcon}

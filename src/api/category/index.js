@@ -33,7 +33,6 @@
 
 
 // api/category.js
-
 const BASE_URL = 'http://127.0.0.1:8000/resturant/category/';
 
 export const categoryAPI = async () => {
@@ -43,7 +42,7 @@ export const categoryAPI = async () => {
       throw new Error('Failed to fetch categories');
     }
     const data = await response.json();
-    return data; // This returns the category data
+    return data; 
   } catch (error) {
     throw new Error(error.message);
   }
@@ -51,14 +50,16 @@ export const categoryAPI = async () => {
 
 export const categoryDeleteAPI = async (id) => {
   try {
-    const response = await fetch(`${BASE_URL}/delete/${id}`, {
+    const response = await fetch(`${BASE_URL}delete/${id}`, {
       method: 'DELETE',
     });
+
     if (!response.ok) {
       throw new Error('Failed to delete category');
     }
+
     const data = await response.json();
-    return data.message;
+    return data; 
   } catch (error) {
     throw new Error(error.message);
   }
