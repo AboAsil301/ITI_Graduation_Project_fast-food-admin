@@ -11,40 +11,48 @@ import {
   OrdersDiv,
   OrdersSpan,
   OrdersStyled,
-  TablePaginationStyle,
 } from "./OrderContainer.styled";
 import LoadGif from "../../Image/icon/loading.gif";
-import { Dropdown } from "react-bootstrap";
+import { Dropdown, Pagination } from "react-bootstrap";
 import Swal from "sweetalert2";
-
+import "./order.css";
 export default function OrderContainer() {
   const [orders, setOrders] = React.useState(null);
+  const [page, setPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(1);
+  let counts;
 
-  const fetchOrder = async () => {
+  const fetchOrder = async (page = 1) => {
     try {
-      const response = await fetch("http://localhost:8000/orders/orders/");
+      const response = await fetch(
+        `http://localhost:8000/orders/orders/?page=${page}&ordering=ordering_date`
+      );
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
       const data = await response.json();
-      const orderedOrders = data.filter((order) => order.ordered === true);
+      const orderedOrders = data.results.filter(
+        (order) => order.ordered === true
+      );
       setOrders(orderedOrders);
+      setTotalPages(data.total_pages);
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
   };
 
   React.useEffect(() => {
-    fetchOrder();
-  }, []);
+    fetchOrder(page);
+  }, [page]);
 
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setPage(newPage);
+    }
   };
+
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
       const response = await fetch(
@@ -63,23 +71,15 @@ export default function OrderContainer() {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
-      // Handle successful response
       const responseData = await response.json();
-
-      // Display SweetAlert on success
       Swal.fire({
         icon: "success",
         title: "Order Status Updated",
         text: `Order ${orderId} status has been updated to ${responseData.status}.`,
       });
-
       console.log("Order status updated successfully:", responseData);
     } catch (error) {
-      // Handle error
       console.error("Error updating order status:", error);
-
-      // Display SweetAlert on error
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -88,55 +88,78 @@ export default function OrderContainer() {
     }
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+  const countOrdersInEachState = (orders) => {
+    const states = ["In Progress", "Pending", "Out for Delivery", "Delivered"];
+    const counts = {};
+
+    // Initialize counts
+    states.forEach((state) => {
+      counts[state] = 0;
+    });
+
+    // Count orders in each state
+    orders.forEach((order) => {
+      if (states.includes(order.status)) {
+        counts[order.status]++;
+      }
+    });
+
+    return counts;
   };
 
+  // In your component
   if (!orders) {
     return <LoadingImage src={LoadGif} alt="loading" />;
+  } else {
+    counts = countOrdersInEachState(orders);
   }
-  const handleChange = (orderId, newStatus) => {
-    setOrders((prevOrders) =>
-      prevOrders.map((prevOrder) =>
-        prevOrder.id === orderId
-          ? { ...prevOrder, status: newStatus }
-          : prevOrder
-      )
-    );
-  };
-
   return (
-    <OrdersStyled className="category-page">
-      <OrdersDiv>
-        <OrdersSpan>Orders</OrdersSpan>
-      </OrdersDiv>
+    <div>
+      <OrdersStyled className="category-page">
+        <OrdersDiv>
+          <OrdersSpan>Orders</OrdersSpan>
+        </OrdersDiv>
+        <h2>Order Counts</h2>
+        <ul className="d-flex flex-row justify-content-around bg-light text-dark py-2 fw-bold">
+          {Object.entries(counts).map(([state, count]) => (
+            <li key={state}>
+              {state}: {count}
+            </li>
+          ))}
+        </ul>
 
-      <Paper sx={{ width: "99%", boxShadow: "none" }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center" style={{ padding: 0 }}>
-                  Order ID
-                </TableCell>
-                <TableCell align="center" style={{ padding: 0 }}>
-                  Total Price
-                </TableCell>
-                <TableCell align="center" style={{ padding: 0 }}>
-                  Ordered Date
-                </TableCell>
-                <TableCell align="center" style={{ padding: 0 }}>
-                  Status
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {orders
-                ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => (
+        <Paper sx={{ width: "99%" }}>
+          <TableContainer>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center" style={{ padding: 0 }}>
+                    Order ID
+                  </TableCell>
+                  <TableCell align="center" style={{ padding: 0 }}>
+                    Total Price
+                  </TableCell>
+                  <TableCell align="center" style={{ padding: 0 }}>
+                    Ordered Date
+                  </TableCell>
+                  <TableCell align="center" style={{ padding: 0 }}>
+                    Name
+                  </TableCell>
+                  <TableCell align="center" style={{ padding: 0 }}>
+                    Address
+                  </TableCell>
+                  <TableCell align="center" style={{ padding: 0 }}>
+                    Phone
+                  </TableCell>
+                  <TableCell align="center" style={{ padding: 0 }}>
+                    Status
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {orders.map((row, index) => (
                   <React.Fragment key={`table-${row.id}`}>
-                    <TableRow hover tabIndex={-1} className="bg-info">
+                    <TableRow className="order-header" hover tabIndex={-1}>
                       <TableCell align="center" style={{ padding: 0 }}>
                         {row.id}
                       </TableCell>
@@ -147,10 +170,18 @@ export default function OrderContainer() {
                         {new Date(row.creating_date).toLocaleString()}
                       </TableCell>
                       <TableCell align="center" style={{ padding: 0 }}>
+                        {row.user.username}
+                      </TableCell>
+                      <TableCell align="center" style={{ padding: 0 }}>
+                        {row.user.profile.address}
+                      </TableCell>
+                      <TableCell align="center" style={{ padding: 0 }}>
+                        {row.user.profile.phone}
+                      </TableCell>
+                      <TableCell align="center" style={{ padding: 0 }}>
                         <Dropdown
                           onSelect={(newStatus) => {
                             updateOrderStatus(row.id, newStatus);
-                            handleChange(row.id, newStatus);
                           }}
                         >
                           <Dropdown.Toggle
@@ -160,7 +191,7 @@ export default function OrderContainer() {
                             {row.status}
                           </Dropdown.Toggle>
 
-                          <Dropdown.Menu class>
+                          <Dropdown.Menu>
                             <Dropdown.Item
                               eventKey="Pending"
                               active={row.status === "Pending"}
@@ -179,15 +210,21 @@ export default function OrderContainer() {
                             >
                               Out for Delivery
                             </Dropdown.Item>
+                            <Dropdown.Item
+                              eventKey="Delivered"
+                              active={row.status === "Delivered"}
+                            >
+                              Delivered
+                            </Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell colSpan={4}>
+                      <TableCell colSpan={6}>
                         <Table size="small">
                           <TableHead>
-                            <TableRow>
+                            <TableRow className=" product-header border border-3">
                               <TableCell
                                 align="center"
                                 style={{ padding: 0, borderBottom: "none" }}
@@ -198,13 +235,13 @@ export default function OrderContainer() {
                                 align="center"
                                 style={{ padding: 0, borderBottom: "none" }}
                               >
-                                Price
+                                Quantity
                               </TableCell>
                               <TableCell
                                 align="center"
                                 style={{ padding: 0, borderBottom: "none" }}
                               >
-                                Quantity
+                                Price
                               </TableCell>
                             </TableRow>
                           </TableHead>
@@ -212,7 +249,7 @@ export default function OrderContainer() {
                             {row.orderItems.map((item, itemIndex) => (
                               <TableRow
                                 key={`table-item-${item.id}`}
-                                className="border"
+                                className="border border-secondary"
                               >
                                 <TableCell
                                   align="center"
@@ -224,13 +261,13 @@ export default function OrderContainer() {
                                   align="center"
                                   style={{ padding: 0, borderBottom: "none" }}
                                 >
-                                  {item.product.price}
+                                  {item.quantity}
                                 </TableCell>
                                 <TableCell
                                   align="center"
                                   style={{ padding: 0, borderBottom: "none" }}
                                 >
-                                  {item.quantity}
+                                  {item.product.price * item.quantity}
                                 </TableCell>
                               </TableRow>
                             ))}
@@ -240,19 +277,24 @@ export default function OrderContainer() {
                     </TableRow>
                   </React.Fragment>
                 ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePaginationStyle
-          rowsPerPageOptions={[10, 25, 50]}
-          component="div"
-          count={orders?.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-    </OrdersStyled>
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <div className="d-flex justify-content-center">
+            <Pagination>
+              <Pagination.Prev
+                onClick={() => handlePageChange(page - 1)}
+                disabled={page <= 1}
+              />
+              <Pagination.Item active>{page}</Pagination.Item>
+              <Pagination.Next
+                onClick={() => handlePageChange(page + 1)}
+                disabled={page >= totalPages}
+              />
+            </Pagination>
+          </div>
+        </Paper>
+      </OrdersStyled>
+    </div>
   );
 }
