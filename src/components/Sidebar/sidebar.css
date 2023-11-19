@@ -29,6 +29,7 @@
 
 .side-menu {
   background-color: rgba(199, 79, 235, 1);
+  /* background-color:	#FF0000; */
   border-radius: 14px;
   padding: 24px 16px 44px 24px;
   height: 472px;
@@ -37,7 +38,8 @@
 
 .side-menu a,
 .side-menu button {
-  color: rgba(242, 242, 242, 0.87);
+  /* color: rgba(242, 242, 242, 0.87); */
+  color: #fff;
   text-decoration: none;
   font-weight: 500;
   font-size: 16px;
