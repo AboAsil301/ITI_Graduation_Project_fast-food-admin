@@ -35,6 +35,7 @@ const SideBar = ({ isOpen, toggle }) => {
         localStorage.removeItem("refresh");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("id");
+        localStorage.removeItem("isLogin");
         dispatch(setLogin(false));
         Swal.fire({
           icon: "success",

@@ -62,8 +62,9 @@ const LoginContainer = () => {
           localStorage.setItem("id", data.user.id);
           localStorage.setItem("access", data.access);
           localStorage.setItem("refresh", data.refresh);
+          localStorage.setItem("isLogin", true);
           dispatch(setLogin(true));
-          navigate("/"); // Update the redirect path if needed
+          navigate("/panel/dashboard"); // Update the redirect path if needed
         } else {
           toast.error("Invalid email or password", {
             autoClose: 2000,
