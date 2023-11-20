@@ -13,10 +13,12 @@ import {
   OffersSpan,
   OffersStyled,
   TablePaginationStyle,
+  UpdateImage,
 } from "./OfferContainer.styled";
 import { AddProductBtn } from "../Shared/AddProductBtn";
 import { Image } from "react-bootstrap";
 import DeleteIcon from "../../Image/icon/delete.svg";
+import UpdateIcon from "../../Image/icon/update-icon.svg";
 import LoadGif from "../../Image/icon/loading.gif";
 import Swal from "sweetalert2";
 import { ToastContainer, toast } from "react-toastify";
@@ -27,8 +29,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 const columns = [
   { id: "id", label: "id", minWidth: 100, align: "center" },
-  { id: "title", label: "title", minWidth: 100, align: "center" },
-  { id: "description", label: "description", minWidth: 170, align: "center" },
+  { id: "start_date", label: "Start Date", minWidth: 100, align: "center" },
+  { id: "end_date", label: "End Date", minWidth: 170, align: "center" },
   { id: "image", label: "image", minWidth: 170, align: "center" },
 ];
 
@@ -111,8 +113,8 @@ export default function OfferContainer() {
                     {column.label.toUpperCase()}
                   </TableCell>
                 ))}
-                <TableCell align={"right"} cellwidth={"20"}></TableCell>
-              </TableRow>
+                <TableCell align={"center"} cellwidth={"20"}>Update</TableCell>
+                <TableCell align={"center"} cellwidth={"20"}>Delete</TableCell>              </TableRow>
             </TableHead>
             <TableBody>
               {state.offersSlice.data
@@ -136,8 +138,6 @@ export default function OfferContainer() {
                                 alt={column.id}
                                 src={value}
                               />
-                            ) : value.length > 30 ? (
-                              `${value.slice(0, 30)}...`
                             ) : (
                               value
                             )}
@@ -145,7 +145,16 @@ export default function OfferContainer() {
                         );
                       })}
 
-                      <TableCell key={row.id} align={"right"}>
+                      <TableCell key={`update-${row.id}`} align={"center"}>
+                        <UpdateImage
+                          onClick={() => deleteOffers(row.id)}
+                          src={UpdateIcon}
+                          width={"20"}
+                          height={"20"}
+                        />
+                      </TableCell>
+
+                      <TableCell key={row.id} align={"center"}>
                         <DeleteImage
                           onClick={() => deleteOffers(row.id)}
                           src={DeleteIcon}

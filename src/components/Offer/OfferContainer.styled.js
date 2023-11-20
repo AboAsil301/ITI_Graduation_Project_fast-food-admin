@@ -24,7 +24,9 @@ export const OffersSpan = styled.span`
 export const DeleteImage = styled.img`
    cursor: pointer;
 `
-
+export const UpdateImage = styled.img`
+  cursor: pointer;
+`
 export const TablePaginationStyle = styled(TablePagination)`
   background-color: #1E1E30;
   color: #fff !important;
