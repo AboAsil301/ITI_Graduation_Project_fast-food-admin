@@ -1,21 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Paper, Tab, Tabs } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Orders = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const currentStatus = decodeURIComponent(location.pathname.split("/").pop());
 
   const handleTabChange = (value) => {
     navigate(`/orders/${value}`);
   };
+  const [newStatus, setNewStatus] = useState("pending");
+  useEffect(() => {
+    const currentStatus = decodeURIComponent(
+      location.pathname.split("/").pop()
+    );
+    setNewStatus(currentStatus);
+  }, [location]);
 
   return (
     <div>
       <Paper>
         <Tabs
-          value={currentStatus}
+          value={newStatus}
           indicatorColor="primary"
           textColor="primary"
           variant="fullWidth"

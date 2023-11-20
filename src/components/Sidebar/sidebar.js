@@ -45,7 +45,6 @@ const SideBar = ({ isOpen, toggle }) => {
         });
         navigate("login/");
       } else {
-        console.log(localStorage.refresh);
         console.error("Logout failed");
       }
     } catch (error) {
@@ -76,7 +75,7 @@ const SideBar = ({ isOpen, toggle }) => {
           <img src={categoryIcon} alt="Category" />
           Category
         </Link>
-        <Link to="/panel/orders">
+        <Link to="/orders/pending">
           <img src={orderIcon} alt="Orders" />
           Orders
         </Link>

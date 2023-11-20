@@ -70,7 +70,7 @@ const StatusPage = () => {
       const responseData = await response.json();
       return responseData;
     } catch (error) {
-      throw error; // Re-throw the error to handle it in the calling function
+      throw error;
     }
   };
   const handleStatusChange = async (orderId, newStatus) => {
