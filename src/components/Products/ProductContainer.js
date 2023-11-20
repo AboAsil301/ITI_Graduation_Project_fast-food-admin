@@ -49,7 +49,7 @@ export default function ProductContainer() {
 
   const deleteProduct = (id) => {
     Swal.fire({
-      title:"Are you sure it’s deleted ?",
+      title: "Are you sure it’s deleted ?",
       text: "Attention! If you delete this product, it will not come back...?",
       showCancelButton: true,
       cancelButtonColor: "transparent",
@@ -65,7 +65,7 @@ export default function ProductContainer() {
             );
             dispatch(setProducts(newArray));
           })
-          .catch(() => {});
+          .catch(() => { });
         toast.success("The operation is succesful!", {
           autoClose: 1000,
           pauseOnHover: true,
@@ -74,7 +74,7 @@ export default function ProductContainer() {
     });
   };
 
-  const [page, ] = React.useState(0);
+  const [page,] = React.useState(0);
   // const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   // const handleChangePage = (event, newPage) => {
@@ -87,6 +87,10 @@ export default function ProductContainer() {
   // };
 
   if (!state.productsSlice.data || state.productsSlice.data.length === 0) {
+    return <LoadingImage src={LoadGif} alt="loading" />;
+  }
+
+  if (!Array.isArray(state.productsSlice.data) || state.productsSlice.data.length === 0) {
     return <LoadingImage src={LoadGif} alt="loading" />;
   }
 
@@ -114,62 +118,70 @@ export default function ProductContainer() {
         }}
       >
         {state.productsSlice.data.map((item) => {
-          return (
-            <Grid
-              key={item.id}
-              sx={{
-                width: 196,
-                height: 273,
-                background: "#FFFFFF",
-                boxShadow: "0px 4px 4px rgba(57, 57, 57, 0.25)",
-                borderRadius: "5px",
-                marginRight: 3,
-                marginBottom: 3,
-              }}
-            >
-              <ProductImageContainer>
-              <ProductImage src={`http://127.0.0.1:8000${item.image}`} alt={item.name} />
-              </ProductImageContainer>
-              <CardContent sx={{ display: "grid" }}>
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="span"
-                  sx={{ color: "#1E1E30", fontSize: 18 }}
-                >
-                  {item.name}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="#8E8E93"
-                  sx={{ fontSize: 14 }}
-                  component="span"
-                >
-                  {item.category}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="#00B2A9"
-                  sx={{
-                    fontSize: 12,
-                    fontWeight: 500,
-                    display: "grid",
-                  }}
-                  component="span"
-                >
-                  <ProductPriceDelete sx={{ backgroundColor: "red" }}>
-                    <Price>${item.price}</Price>
-                    <DeleteImage
-                      size="small"
-                      onClick={() => deleteProduct(item.id)}
-                      src={DeleteIcon}
-                      alt="delete"
-                    />
-                  </ProductPriceDelete>
-                </Typography>
-              </CardContent>
-            </Grid>
-          );
+          // Add a check to verify if the item and its image property are defined
+          if (item && item.image) {
+            return (
+              <Grid
+                key={item.id}
+                sx={{
+                  width: 196,
+                  height: 273,
+                  background: "#FFFFFF",
+                  boxShadow: "0px 4px 4px rgba(57, 57, 57, 0.25)",
+                  borderRadius: "5px",
+                  marginRight: 3,
+                  marginBottom: 3,
+                }}
+              >
+                <ProductImageContainer>
+                  {item.image && (
+                    <ProductImage src={`http://127.0.0.1:8000${item.image}`} alt={item.name} />
+                  )}
+                </ProductImageContainer>
+                <CardContent sx={{ display: "grid" }}>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="span"
+                    sx={{ color: "#1E1E30", fontSize: 18 }}
+                  >
+                    {item.name}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="#8E8E93"
+                    sx={{ fontSize: 14 }}
+                    component="span"
+                  >
+                    {item.category}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="#00B2A9"
+                    sx={{
+                      fontSize: 12,
+                      fontWeight: 500,
+                      display: "grid",
+                    }}
+                    component="span"
+                  >
+                    <ProductPriceDelete sx={{ backgroundColor: "red" }}>
+                      <Price>${item.price}</Price>
+                      <DeleteImage
+                        size="small"
+                        onClick={() => deleteProduct(item.id)}
+                        src={DeleteIcon}
+                        alt="delete"
+                      />
+                    </ProductPriceDelete>
+                  </Typography>
+                </CardContent>
+              </Grid>
+            );
+
+          }
+          return null; // Skip rendering if the item or its image property is undefined
+
         })}
       </TableContainer>
       <Stack spacing={5} className="mt-5">
