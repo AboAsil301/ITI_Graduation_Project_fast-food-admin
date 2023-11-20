@@ -90,17 +90,23 @@ export const ProductModal = (props) => {
       return errors;
     },
     onSubmit: (values) => {
-      let id = state.productsSlice.data.slice(-1)[0].id + 1;
+      // let id = state.productsSlice.data.slice(-1)[0].id + 1;
 
       let item = {
-        id: id,
+        // id: id,
         image: values.image,
-        product_name: values.name,
+        name: values.name,
         description: values.description,
-        product_price: values.price,
+        price: values.price,
         category: values.category,
       };
-      productsCreateAPI(item)
+      // productsCreateAPI(item)
+      //   .then((res) => {
+      //     let newArray = [...state.productsSlice.data, item];
+      //     dispatch(setProducts(newArray));
+      //   })
+      //   .catch(() => { });
+        productsCreateAPI(item)
         .then((res) => {
           let newArray = [...state.productsSlice.data, item];
           dispatch(setProducts(newArray));
