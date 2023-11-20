@@ -23,24 +23,28 @@ const Orders = () => {
           onChange={(event, value) => handleTabChange(value)}
         >
           <Tab
+            className=" text-dark fs-5 fw-bold"
             label="Pending"
             value="pending"
             component={Link}
             to="/orders/pending"
           />
           <Tab
+            className="bg-primary text-light  fs-5 fw-bold"
             label="In Progress"
             value="In Progress"
             component={Link}
             to="/orders/In Progress"
           />
           <Tab
+            className="bg-warning text-dark fs-5 fw-bold"
             label="Out For Delivery"
             value="Out for Delivery"
             component={Link}
             to="/orders/Out for Delivery"
           />
           <Tab
+            className="bg-success text-light fs-5 fw-bold"
             label="Delivered"
             value="delivered"
             component={Link}

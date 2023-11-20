@@ -11,12 +11,7 @@ import {
   TableRow,
 } from "@mui/material";
 import Swal from "sweetalert2";
-import {
-  LoadingImage,
-  OrdersDiv,
-  OrdersSpan,
-  OrdersStyled,
-} from "./OrderContainer.styled";
+import { LoadingImage, OrdersStyled } from "./OrderContainer.styled";
 import LoadGif from "../../Image/icon/loading.gif";
 import Orders from ".";
 import { useParams } from "react-router-dom";
@@ -88,8 +83,12 @@ const StatusPage = () => {
     });
   };
 
-  if (!orders) {
+  if (loading) {
     return <LoadingImage src={LoadGif} alt="loading" />;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   return (
@@ -149,6 +148,7 @@ const StatusPage = () => {
                           onChange={(e) =>
                             handleStatusChange(row.id, e.target.value)
                           }
+                          className="bg-primary text-light"
                         >
                           <MenuItem value="Pending">Pending</MenuItem>
                           <MenuItem value="In Progress">In Progress</MenuItem>
@@ -160,10 +160,10 @@ const StatusPage = () => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell colSpan={7}>
+                      <TableCell colSpan={12}>
                         <Table size="small">
                           <TableHead>
-                            <TableRow className="product-header border border-3">
+                            <TableRow className="product-header border border-3 border-secondary">
                               <TableCell align="center">Product Name</TableCell>
                               <TableCell align="center">Quantity</TableCell>
                               <TableCell align="center">Price</TableCell>
@@ -171,10 +171,7 @@ const StatusPage = () => {
                           </TableHead>
                           <TableBody>
                             {row.orderItems.map((item, itemIndex) => (
-                              <TableRow
-                                key={`table-item-${item.id}`}
-                                className="border border-secondary"
-                              >
+                              <TableRow key={`table-item-${item.id}`}>
                                 <TableCell align="center">
                                   {item.product.name}
                                 </TableCell>
