@@ -43,14 +43,6 @@ export default function OfferContainer() {
     getOffers();
   }, []);
 
-  // const getOffers = () => {
-  //   offersAPI
-  //     .then((res) => {
-  //       dispatch(setOffers(res.data.offers));
-  //     })
-  //     .catch((err) => { });
-  // };
-
   const getOffers = async () => {
     try {
       const res = await offersAPI(); 
