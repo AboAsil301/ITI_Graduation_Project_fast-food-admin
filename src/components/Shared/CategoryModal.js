@@ -2,7 +2,6 @@ import * as React from "react";
 import {
   ModalDiv,
   ErrorText,
-  ImageText,
   AddData,
   BtnDiv,
   CancelBtn,
@@ -10,106 +9,59 @@ import {
   DataDiv,
   DataInput,
   DataLabel,
-  ImageDiv,
-  ImageIconSection,
-  ImageInput,
-  ImageSpan,
-  ImageTitle,
-  ImageUpload,
   DataTitle,
-  ImageTitleText,
-  ImagePreview,
 } from "./AddModal.styled";
-import UploadIcon from "../../Image/icon/upload.svg";
 import { categoryCreateAPI } from "../../api/category";
 import { useFormik } from "formik";
-import slugify from "react-slugify";
 import { useDispatch, useSelector } from "react-redux";
 import { setCategory } from "../../store/slice/categorySlice";
 import { ToastContainer, toast } from "react-toastify";
 
 export const CategoryModal = (props) => {
-  const [file, setFile] = React.useState();
-
-  function handleChange(e) {
-    setFile(URL.createObjectURL(e.target.files[0]));
-    formik.values.image = URL.createObjectURL(e.target.files[0]) || "";
-    formik.errors.image = false;
-    return formik.values.image;
-  }
-
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
-  const generateSlug = () => {
-    let inputName = formik.values.name;
-    let slug = slugify(inputName);
-    formik.values.slug = slug;
-    return slug;
-  };
+
 
   const formik = useFormik({
     initialValues: {
-      image: "",
       name: "",
-      slug: "",
     },
     validate: (values) => {
       let errors = {};
-      if (!values.image) {
-        errors.image = "Image is required";
-      }
       if (!values.name) {
         errors.name = "Name is required";
       }
       return errors;
     },
-    onSubmit: (values) => {
-      let id = state.categorySlice.data.slice(-1)[0].id + 1;
-      let item = {
-        id: id,
-        image: values.image,
-        name: values.name,
-        slug: values.slug,
-      };
-      categoryCreateAPI(item)
-        .then((res) => {
-          let newArray = [...state.categorySlice.data, item];
-          dispatch(setCategory(newArray));
-        })
-        .catch(() => {});
-      toast.success("Successfully added", {
-        autoClose: 1000,
-        pauseOnHover: true,
-      });
-      props.closeFunc();
-    },
+
+    onSubmit: async (values) => {
+      try {
+        const newItem = {
+          name: values.name,
+        };
+    
+        // Make the API call to create the category
+        const createdCategory = await categoryCreateAPI(newItem);
+    
+        // Update the state with the new category if the API call was successful
+        const updatedCategories = [...state.categorySlice.data, createdCategory];
+        dispatch(setCategory(updatedCategories));
+    
+        toast.success("Successfully added", {
+          autoClose: 1000,
+          pauseOnHover: true,
+        });
+        props.closeFunc();
+      } catch (error) {
+        toast.error("Failed to add category");
+      }
+    }
+    
   });
 
   return (
     <ModalDiv>
       <form onSubmit={formik.handleSubmit}>
-        <ImageDiv>
-          <ImageTitle>
-            <ImageTitleText>Upload Image</ImageTitleText>
-            {file ? <ImagePreview src={file} alt="preview" /> : ""}
-          </ImageTitle>
-
-          <ImageUpload>
-            <ImageInput
-              type="file"
-              id="image"
-              name="image"
-              onChange={handleChange}
-            />
-            <ImageIconSection>
-              <img src={UploadIcon} alt="upload" />
-              <ImageSpan>upload</ImageSpan>
-            </ImageIconSection>
-            {formik.errors.image && (
-              <ImageText>{formik.errors.image}</ImageText>
-            )}
-          </ImageUpload>
-        </ImageDiv>
         <DataDiv>
           <DataTitle>Add your necessary information</DataTitle>
           <AddData>
@@ -120,20 +72,9 @@ export const CategoryModal = (props) => {
               name="name"
               type="text"
               onChange={formik.handleChange}
-              onKeyDown={() => generateSlug()}
               value={formik.values.name || ""}
             />
             {formik.errors.name && <ErrorText>{formik.errors.name}</ErrorText>}
-            <DataLabel>Slug</DataLabel>
-            <DataInput
-              placeholder="yummy-soup"
-              id="slug"
-              name="slug"
-              type="text"
-              onChange={formik.handleChange}
-              value={generateSlug()}
-              disabled
-            />
           </AddData>
         </DataDiv>
 

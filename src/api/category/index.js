@@ -67,12 +67,12 @@ export const categoryDeleteAPI = async (id) => {
 
 export const categoryCreateAPI = async (cateName) => {
   try {
-    const response = await fetch(`${BASE_URL}/new`, {
+    const response = await fetch(`${BASE_URL}new`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: cateName }),
+      body: JSON.stringify({ "name": cateName.name }),
     });
     if (!response.ok) {
       throw new Error('Failed to create category');
