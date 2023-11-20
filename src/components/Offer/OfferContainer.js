@@ -41,14 +41,24 @@ export default function OfferContainer() {
 
   React.useEffect(() => {
     getOffers();
-  });
+  }, []);
 
-  const getOffers = () => {
-    offersAPI
-      .then((res) => {
-        dispatch(setOffers(res.data.offers));
-      })
-      .catch((err) => { });
+  // const getOffers = () => {
+  //   offersAPI
+  //     .then((res) => {
+  //       dispatch(setOffers(res.data.offers));
+  //     })
+  //     .catch((err) => { });
+  // };
+
+  const getOffers = async () => {
+    try {
+      const res = await offersAPI(); 
+      dispatch(setOffers(res)); 
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching offers:", error);
+    }
   };
 
   const deleteOffers = (id) => {
@@ -136,7 +146,7 @@ export default function OfferContainer() {
                                 width="60"
                                 className="rounded"
                                 alt={column.id}
-                                src={value}
+                                src={`http://127.0.0.1:8000${value}`}
                               />
                             ) : (
                               value
