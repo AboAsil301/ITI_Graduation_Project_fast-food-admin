@@ -1,30 +1,83 @@
-import { Axios, AxiosMockCreate } from "../../mocks";
-import productsData from "../../mocks/products/products.json";
+// import { Axios, AxiosMockCreate } from "../../mocks";
+// import productsData from "../../mocks/products/products.json";
 
-AxiosMockCreate.onGet("/products").reply(() => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve([200, { products: productsData }]);
-    }, 2000);
-  });
-});
+// AxiosMockCreate.onGet("/products").reply(() => {
+//   return new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//       resolve([200, { products: productsData }]);
+//     }, 2000);
+//   });
+// });
 
-AxiosMockCreate.onPost("/products").reply((config) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve([201, { message: "Created", result: JSON.parse(config.data) }]);
-    }, 2000);
-  });
-});
+// AxiosMockCreate.onPost("/products").reply((config) => {
+//   return new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//       resolve([201, { message: "Created", result: JSON.parse(config.data) }]);
+//     }, 2000);
+//   });
+// });
 
-AxiosMockCreate.onDelete(/\/products\/\d+/).reply(() => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve([200, { message: "Success" }]);
-    }, 2000);
-  });
-});
+// AxiosMockCreate.onDelete(/\/products\/\d+/).reply(() => {
+//   return new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//       resolve([200, { message: "Success" }]);
+//     }, 2000);
+//   });
+// });
 
-export const productsAPI = Axios.get("/products");
-export const productsDeleteAPI = (id) => Axios.delete(`/products/${id}`);
-export const productsCreateAPI = (item) => Axios.post(`/products`, item);
+// export const productsAPI = Axios.get("/products");
+// export const productsDeleteAPI = (id) => Axios.delete(`/products/${id}`);
+// export const productsCreateAPI = (item) => Axios.post(`/products`, item);
+
+
+// api/products.js
+const BASE_URL = 'http://127.0.0.1:8000/resturant/products/';
+
+export const productsAPI = async () => {
+  try {
+    const response = await fetch(BASE_URL);
+    if (!response.ok) {
+      throw new Error('Failed to fetch products');
+    }
+    const data = await response.json();
+    return data; 
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const productsDeleteAPI = async (id) => {
+  try {
+    const response = await fetch(`${BASE_URL}delete/${id}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete product');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const productsCreateAPI = async (item) => {
+  try {
+    const response = await fetch(`${BASE_URL}create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(item),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to create product');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};

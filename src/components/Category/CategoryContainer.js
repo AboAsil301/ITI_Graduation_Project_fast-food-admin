@@ -38,7 +38,7 @@ export default function CategoryContainer() {
 
   React.useEffect(() => {
     getCategory();
-  });
+  }, []);
 
   const getCategory = async () => {
     try {
@@ -138,6 +138,8 @@ export default function CategoryContainer() {
                     >
                       {columns.map((column) => {
                         const value = row[column.id];
+                        // console.log("Column ID:", column.id); // Log the column id to track when it's 'id'
+                        // console.log("Value:", value); // Log the value to see if it's undefined
                         return (
                           <TableCell key={`table-cell-${column.id}`} align={column.align}>
                             {column.id === "image" ? (

@@ -28,3 +28,6 @@ AxiosMockCreate.onDelete(/\/offers\/\d+/).reply(() => {
 export const offersAPI = Axios.get("/offers");
 export const offersDeleteAPI = (id) => Axios.delete(`/offers/${id}`);
 export const offersCreateAPI = (item) => Axios.post(`/offers`, item);
+
+
+

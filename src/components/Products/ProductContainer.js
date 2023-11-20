@@ -38,12 +38,13 @@ export default function ProductContainer() {
     getProduct();
   });
 
-  const getProduct = () => {
-    productsAPI
-      .then((res) => {
-        dispatch(setProducts(res.data.products));
-      })
-      .catch((err) => {});
+  const getProduct = async () => {
+    try {
+      const res = await productsAPI();
+      dispatch(setProducts(res));
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
   };
 
   const deleteProduct = (id) => {
@@ -85,7 +86,7 @@ export default function ProductContainer() {
   //   setPage(0);
   // };
 
-  if (!state.productsSlice.data[0]) {
+  if (!state.productsSlice.data || state.productsSlice.data.length === 0) {
     return <LoadingImage src={LoadGif} alt="loading" />;
   }
 
@@ -127,7 +128,7 @@ export default function ProductContainer() {
               }}
             >
               <ProductImageContainer>
-                <ProductImage src={item.image} alt={item.product_name} />
+              <ProductImage src={`http://127.0.0.1:8000${item.image}`} alt={item.name} />
               </ProductImageContainer>
               <CardContent sx={{ display: "grid" }}>
                 <Typography
@@ -136,7 +137,7 @@ export default function ProductContainer() {
                   component="span"
                   sx={{ color: "#1E1E30", fontSize: 18 }}
                 >
-                  {item.product_name}
+                  {item.name}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -144,7 +145,7 @@ export default function ProductContainer() {
                   sx={{ fontSize: 14 }}
                   component="span"
                 >
-                  {item.restaurant_name}
+                  {item.category}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -157,7 +158,7 @@ export default function ProductContainer() {
                   component="span"
                 >
                   <ProductPriceDelete sx={{ backgroundColor: "red" }}>
-                    <Price>${item.product_price}</Price>
+                    <Price>${item.price}</Price>
                     <DeleteImage
                       size="small"
                       onClick={() => deleteProduct(item.id)}
