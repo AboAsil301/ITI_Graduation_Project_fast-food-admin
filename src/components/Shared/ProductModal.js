@@ -44,7 +44,7 @@ export const ProductModal = (props) => {
   const getCategory = async () => {
     try {
       const res = await categoryAPI(); 
-      dispatch(setCategory(res)); 
+      setCategory([...new Set(res.map((item) => item.name))]);
     } catch (error) {
       // Handle errors here
       console.error("Error fetching categories:", error);
@@ -192,7 +192,7 @@ export const ProductModal = (props) => {
                 onChange={formik.handleChange}
                 value={formik.values.category || ""}
               >
-                {category?.map((category) => {
+                {/* {category?.map((category) => {
                   return (
                     <option
                       value={category.name}
@@ -201,8 +201,18 @@ export const ProductModal = (props) => {
                       {category.name}
                     </option>
                   );
-                })}
-                )
+                })} */}
+
+                {category?.map((item, index) => (
+                    <option
+                      value={item.name}
+                      key={index}
+                    >
+                      {item}
+                    </option>
+                  
+               ) )}
+ 
               </DataSelect>
               {formik.errors.category && (
                 <ErrorText>{formik.errors.category}</ErrorText>
