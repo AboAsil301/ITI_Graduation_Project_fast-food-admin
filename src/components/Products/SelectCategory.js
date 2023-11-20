@@ -48,7 +48,7 @@ export default function SelectCategory() {
         </MenuItem>
         {category.map((item) => (
           <MenuItem key={item.id} value={item.name} sx={{ fontSize: 14 }}>
-            {item}
+            {item.name}
           </MenuItem>
         ))}
       </Select>

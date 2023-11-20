@@ -41,14 +41,15 @@ export const ProductModal = (props) => {
     getCategory();
   });
 
-  const getCategory = () => {
-    categoryAPI
-      .then((res) => {
-        setCategory(res.data.category);
-      })
-      .catch((err) => {});
+  const getCategory = async () => {
+    try {
+      const res = await categoryAPI(); 
+      dispatch(setCategory(res)); 
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching categories:", error);
+    }
   };
-
   function handleChange(e) {
     setFile(URL.createObjectURL(e.target.files[0]));
     formik.values.image = URL.createObjectURL(e.target.files[0]) || "";
