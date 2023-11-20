@@ -36,6 +36,7 @@ export const CategoryModal = (props) => {
 
     onSubmit: async (values) => {
       try {
+        // const id = state.categorySlice.data.slice(-1)[0].id + 1;
         const newItem = {
           name: values.name,
         };

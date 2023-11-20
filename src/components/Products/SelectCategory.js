@@ -10,7 +10,7 @@ export default function SelectCategory() {
 
   React.useEffect(() => {
     getCategory();
-  });
+  }, []);
 
   const getCategory = async () => {
     try {

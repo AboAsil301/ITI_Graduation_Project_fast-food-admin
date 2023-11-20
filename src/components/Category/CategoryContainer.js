@@ -134,12 +134,13 @@ export default function CategoryContainer() {
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      key={`table-row-${row.id}`}
+                      // key={`table-row-${row.id}`}
+                      key={index}
                     >
                       {columns.map((column) => {
                         const value = row[column.id];
                         // console.log("Column ID:", column.id); // Log the column id to track when it's 'id'
-                        // console.log("Value:", value); // Log the value to see if it's undefined
+                        console.log("Value:", value); // Log the value to see if it's undefined
                         return (
                           <TableCell key={`table-cell-${column.id}`} align={column.align}>
                             {column.id === "image" ? (

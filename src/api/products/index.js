@@ -65,18 +65,21 @@ export const productsDeleteAPI = async (id) => {
 
 export const productsCreateAPI = async (item) => {
   try {
-    const response = await fetch(`${BASE_URL}create`, {
+    const formData = new FormData();
+    formData.append('image', item.image);
+    formData.append('name', item.name);
+    formData.append('description', item.description);
+    formData.append('price',  item.price);
+    formData.append('category', item.category);
+    const response = await fetch(`${BASE_URL}new`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(item),
+      body: formData,
     });
     if (!response.ok) {
       throw new Error('Failed to create product');
     }
     const data = await response.json();
-    return data;
+    return data.result;
   } catch (error) {
     throw new Error(error.message);
   }
