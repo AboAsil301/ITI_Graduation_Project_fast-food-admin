@@ -32,19 +32,18 @@
 // api/products.js
 const BASE_URL = "http://127.0.0.1:8000/resturant/products/";
 
-export const productsAPI = async () => {
+export const productsAPI = async (page = 1) => {
   try {
-    const response = await fetch(BASE_URL);
+    const response = await fetch(`${BASE_URL}?page=${page}`);
     if (!response.ok) {
       throw new Error("Failed to fetch products");
     }
     const data = await response.json();
-    return data.results;
+    return data;
   } catch (error) {
     throw new Error(error.message);
   }
 };
-
 export const productsDeleteAPI = async (id) => {
   try {
     const response = await fetch(`${BASE_URL}delete/${id}`, {

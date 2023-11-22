@@ -28,7 +28,8 @@
 }
 
 .side-menu {
-  background-color: rgb(119, 28, 147);
+  background-color: rgb(144, 37, 176);
+  /* background-color:	#FF0000; */
   border-radius: 14px;
   padding: 24px 16px 44px 24px;
   height: 472px;
