@@ -17,12 +17,7 @@ import LoadGif from "../../Image/icon/loading.gif";
 import Swal from "sweetalert2";
 import { ToastContainer, toast } from "react-toastify";
 import DeleteIcon from "../../Image/icon/delete.svg";
-import {
-  CardContent,
-  Grid,
-  Pagination,
-  Typography,
-} from "@mui/material";
+import { CardContent, Grid, Pagination, Typography } from "@mui/material";
 import { productsAPI, productsDeleteAPI } from "../../api/products";
 import { Stack } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,7 +25,6 @@ import { setProducts } from "../../store/slice/productsSlice";
 import SelectCategory from "./SelectCategory";
 
 export default function ProductContainer() {
-
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
 
@@ -38,9 +32,9 @@ export default function ProductContainer() {
     getProduct();
   }, [dispatch]);
 
-  const getProduct = async () => {
+  const getProduct = async (pageNumber) => {
     try {
-      const res = await productsAPI();
+      const res = await productsAPI(pageNumber);
       dispatch(setProducts(res));
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -65,8 +59,8 @@ export default function ProductContainer() {
             );
             dispatch(setProducts(newArray));
           })
-          .catch(() => { });
-        toast.success("The operation is succesful!", {
+          .catch(() => {});
+        toast.success("The operation is successful!", {
           autoClose: 1000,
           pauseOnHover: true,
         });
@@ -74,23 +68,30 @@ export default function ProductContainer() {
     });
   };
 
-  const [page,] = React.useState(0);
-  // const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [page, setPage] = React.useState(1);
 
-  // const handleChangePage = (event, newPage) => {
-  //   setPage(newPage);
-  // };
+  const handleChangePage = (event, newPage) => {
+    // Ensure that the newPage is within a valid range
+    if (newPage >= 1) {
+      setPage(newPage);
 
-  // const handleChangeRowsPerPage = (event) => {
-  //   setRowsPerPage(+event.target.value);
-  //   setPage(0);
-  // };
+      // Check if there is a next page or previous page (not undefined)
+      if (state.productsSlice.next !== undefined) {
+        getProduct(newPage);
+      } else if (newPage > 1 && state.productsSlice.previous !== undefined) {
+        getProduct(newPage - 1); // Fetch the previous page
+      }
+    }
+  };
 
   if (!state.productsSlice.data || state.productsSlice.data.length === 0) {
     return <LoadingImage src={LoadGif} alt="loading" />;
   }
 
-  if (!Array.isArray(state.productsSlice.data) || state.productsSlice.data.length === 0) {
+  if (
+    !Array.isArray(state.productsSlice.data) ||
+    state.productsSlice.data.length === 0
+  ) {
     return <LoadingImage src={LoadGif} alt="loading" />;
   }
 
@@ -118,14 +119,13 @@ export default function ProductContainer() {
         }}
       >
         {state.productsSlice.data.map((item) => {
-          // Add a check to verify if the item and its image property are defined
           if (item && item.image) {
             return (
               <Grid
                 key={item.id}
                 sx={{
-                  width: 196,
-                  height: 273,
+                  width: 200,
+                  height: 280,
                   background: "#FFFFFF",
                   boxShadow: "0px 4px 4px rgba(57, 57, 57, 0.25)",
                   borderRadius: "5px",
@@ -135,7 +135,10 @@ export default function ProductContainer() {
               >
                 <ProductImageContainer>
                   {item.image && (
-                    <ProductImage src={`http://127.0.0.1:8000${item.image}`} alt={item.name} />
+                    <ProductImage
+                      src={`http://127.0.0.1:8000${item.image}`}
+                      alt={item.name}
+                    />
                   )}
                 </ProductImageContainer>
                 <CardContent sx={{ display: "grid" }}>
@@ -143,7 +146,7 @@ export default function ProductContainer() {
                     gutterBottom
                     variant="h5"
                     component="span"
-                    sx={{ color: "#1E1E30", fontSize: 18 }}
+                    sx={{ color: "#1E1E30", fontSize: 16 }}
                   >
                     {item.name}
                   </Typography>
@@ -153,7 +156,7 @@ export default function ProductContainer() {
                     sx={{ fontSize: 14 }}
                     component="span"
                   >
-                    {item.category}
+                    {item.category.name}
                   </Typography>
                   <Typography
                     variant="body2"
@@ -178,14 +181,16 @@ export default function ProductContainer() {
                 </CardContent>
               </Grid>
             );
-
           }
           return null; // Skip rendering if the item or its image property is undefined
-
         })}
       </TableContainer>
       <Stack spacing={5} className="mt-5">
-        <Pagination count={page || 1} color="primary" />
+        <Pagination
+          count={Math.ceil(state.productsSlice.count / 12)}
+          color="primary"
+          onChange={handleChangePage}
+        />
       </Stack>
       <ToastContainer />
     </ProductStyled>

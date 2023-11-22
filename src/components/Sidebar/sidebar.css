@@ -28,12 +28,11 @@
 }
 
 .side-menu {
-  background-color: rgba(199, 79, 235, 1);
+  background-color: rgb(144, 37, 176);
   /* background-color:	#FF0000; */
   border-radius: 14px;
   padding: 24px 16px 44px 24px;
   height: 472px;
-
 }
 
 .side-menu a,
