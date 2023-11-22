@@ -83,12 +83,12 @@ const StatusPage = () => {
     });
   };
 
-  if (loading) {
+  if (loading && !orders) {
     return <LoadingImage src={LoadGif} alt="loading" />;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <LoadingImage src={LoadGif} alt="loading" />;
   }
 
   return (
