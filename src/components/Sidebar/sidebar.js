@@ -12,14 +12,44 @@ import categoryIcon from "../../Image/icon/category.svg";
 import logoutIcon from "../../Image/icon/logout.svg";
 import logo from "../../Image/logo/logo.svg";
 import ITI_logo from "../../Image/logo/iti-logo.png";
+import Swal from "sweetalert2";
 
 const SideBar = ({ isOpen, toggle }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const logoutUser = () => {
-    localStorage.removeItem("isLogin");
-    dispatch(setLogin(false));
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:8000/api/accounts/logout/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+
+          body: JSON.stringify({
+            refresh_token: localStorage.refresh,
+          }),
+        }
+      );
+      if (response.ok) {
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("id");
+        localStorage.removeItem("isLogin");
+        dispatch(setLogin(false));
+        Swal.fire({
+          icon: "success",
+          title: "Logout Successful!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate("login/");
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   return (
@@ -45,19 +75,26 @@ const SideBar = ({ isOpen, toggle }) => {
           <img src={categoryIcon} alt="Category" />
           Category
         </Link>
-        <Link to="/panel/orders">
-          <img src={orderIcon} alt="Orders" />Orders
+        <Link to="/orders/pending">
+          <img src={orderIcon} alt="Orders" />
+          Orders
         </Link>
         <Link to="/panel/offer">
-          <img src={offerIcon} alt="Offers"/>Offers
+          <img src={offerIcon} alt="Offers" />
+          Offers
         </Link>
-        <button onClick={() => logoutUser()}>
-          <img src={logoutIcon} alt="Logout" />Logout
+        <button onClick={() => handleLogout()}>
+          <img src={logoutIcon} alt="Logout" />
+          Logout
         </button>
       </div>
 
       <div className="side-footer text-center mt-2">
-        <img src={ITI_logo} alt="ITI" style={{ width: "100px", height: "100px" }}/>
+        <img
+          src={ITI_logo}
+          alt="ITI"
+          style={{ width: "100px", height: "100px" }}
+        />
         <p>Version: 1.0.</p>
         <p className="year">{new Date().getFullYear()}</p>
       </div>
