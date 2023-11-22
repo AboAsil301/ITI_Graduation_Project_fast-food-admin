@@ -1,6 +1,6 @@
 import React from "react";
 import "./header.css";
-import adminIcon from "../../Image/icon/avatar.jpeg";
+import adminIcon from "../../Image/icon/avatar.png";
 import {
   Navbar,
 } from "reactstrap";
