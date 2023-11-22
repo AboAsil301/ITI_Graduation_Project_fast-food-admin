@@ -29,31 +29,29 @@
 // export const productsDeleteAPI = (id) => Axios.delete(`/products/${id}`);
 // export const productsCreateAPI = (item) => Axios.post(`/products`, item);
 
-
 // api/products.js
-const BASE_URL = 'http://127.0.0.1:8000/resturant/products/';
+const BASE_URL = "http://127.0.0.1:8000/resturant/products/";
 
-export const productsAPI = async () => {
+export const productsAPI = async (page = 1) => {
   try {
-    const response = await fetch(BASE_URL);
+    const response = await fetch(`${BASE_URL}?page=${page}`);
     if (!response.ok) {
-      throw new Error('Failed to fetch products');
+      throw new Error("Failed to fetch products");
     }
     const data = await response.json();
-    return data; 
+    return data;
   } catch (error) {
     throw new Error(error.message);
   }
 };
-
 export const productsDeleteAPI = async (id) => {
   try {
     const response = await fetch(`${BASE_URL}delete/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
 
     if (!response.ok) {
-      throw new Error('Failed to delete product');
+      throw new Error("Failed to delete product");
     }
 
     const data = await response.json();
@@ -66,17 +64,17 @@ export const productsDeleteAPI = async (id) => {
 export const productsCreateAPI = async (item) => {
   try {
     const formData = new FormData();
-    formData.append('image', item.image);
-    formData.append('name', item.name);
-    formData.append('description', item.description);
-    formData.append('price',  item.price);
-    formData.append('category', item.category);
+    formData.append("image", item.image);
+    formData.append("name", item.name);
+    formData.append("description", item.description);
+    formData.append("price", item.price);
+    formData.append("category", item.category);
     const response = await fetch(`${BASE_URL}new`, {
-      method: 'POST',
+      method: "POST",
       body: formData,
     });
     if (!response.ok) {
-      throw new Error('Failed to create product');
+      throw new Error("Failed to create product");
     }
     const data = await response.json();
     return data.result;
