@@ -43,19 +43,19 @@ export const OfferModal = (props) => {
   const formik = useFormik({
     initialValues: {
       image: "",
-      title: "",
-      description: "",
+      startDate: "",
+      endDate: "",
     },
     validate: (values) => {
       let errors = {};
       if (!values.image) {
         errors.image = "Image is required";
       }
-      if (!values.title) {
-        errors.title = "Title is required";
+      if (!values.startDate) {
+        errors.startDate = "Start Date is required";
       }
-      if (!values.description) {
-        errors.description = "Description is required";
+      if (!values.endDate) {
+        errors.endDate = "End Date is required";
       }
       return errors;
     },
@@ -64,8 +64,8 @@ export const OfferModal = (props) => {
       let item = {
         id: id,
         image: values.image,
-        title: values.title,
-        description: values.description,
+        startDate: values.startDate,
+        endDate: values.endDate,
       };
       offersCreateAPI(item)
         .then((res) => {
@@ -107,29 +107,29 @@ export const OfferModal = (props) => {
           </ImageUpload>
         </ImageDiv>
         <DataDiv>
-          <DataTitle>{"Add your Offer information"}</DataTitle>
+          <DataTitle>{"Add your necessary information"}</DataTitle>
           <AddData>
-            <DataLabel>{"Add your necessary information"}</DataLabel>
+            <DataLabel>{"Start Date"}</DataLabel>
             <DataInput
-              placeholder="Soup"
-              id="title"
-              name="title"
-              type="text"
+              placeholder= ""
+              id="startDate"
+              name="startDate"
+              type="date"
               onChange={formik.handleChange}
-              value={formik.values.title || ""}
+              value={formik.values.startDate || ""}
             />
-            {formik.errors.title && <ErrorText>{formik.errors.title}</ErrorText>}
-            <DataLabel>{("Description")}</DataLabel>
+            {formik.errors.startDate && <ErrorText>{formik.errors.startDate}</ErrorText>}
+            <DataLabel>{("End Date")}</DataLabel>
             <DataInput
-              placeholder="description"
-              id="description"
-              name="description"
-              type="textarea"
+              placeholder=""
+              id="endDate"
+              name="endDate"
+              type="date"
               onChange={formik.handleChange}
-              value={formik.values.description || ""}
+              value={formik.values.endDate || ""}
             />
-            {formik.errors.description && (
-              <ErrorText>{formik.errors.description}</ErrorText>
+            {formik.errors.endDate && (
+              <ErrorText>{formik.errors.endDate}</ErrorText>
             )}
           </AddData>
         </DataDiv>

@@ -1,30 +1,88 @@
-import { Axios, AxiosMockCreate } from "../../mocks";
-import offersData from "../../mocks/offers/offers.json";
+// import { Axios, AxiosMockCreate } from "../../mocks";
+// import offersData from "../../mocks/offers/offers.json";
 
-AxiosMockCreate.onGet("/offers").reply(() => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve([200, { offers: offersData }]);
-    }, 2000);
-  });
-});
+// AxiosMockCreate.onGet("/offers").reply(() => {
+//   return new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//       resolve([200, { offers: offersData }]);
+//     }, 2000);
+//   });
+// });
 
-AxiosMockCreate.onPost("/offers").reply((config) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve([201, { message: "Created", result: JSON.parse(config.data) }]);
-    }, 2000);
-  });
-});
+// AxiosMockCreate.onPost("/offers").reply((config) => {
+//   return new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//       resolve([201, { message: "Created", result: JSON.parse(config.data) }]);
+//     }, 2000);
+//   });
+// });
 
-AxiosMockCreate.onDelete(/\/offers\/\d+/).reply(() => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve([200, { message: "Success" }]);
-    }, 2000);
-  });
-});
+// AxiosMockCreate.onDelete(/\/offers\/\d+/).reply(() => {
+//   return new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//       resolve([200, { message: "Success" }]);
+//     }, 2000);
+//   });
+// });
 
-export const offersAPI = Axios.get("/offers");
-export const offersDeleteAPI = (id) => Axios.delete(`/offers/${id}`);
-export const offersCreateAPI = (item) => Axios.post(`/offers`, item);
+// export const offersAPI = Axios.get("/offers");
+// export const offersDeleteAPI = (id) => Axios.delete(`/offers/${id}`);
+// export const offersCreateAPI = (item) => Axios.post(`/offers`, item);
+
+
+// api/offers.js
+const BASE_URL = 'http://127.0.0.1:8000/resturant/offer/';
+
+export const offersAPI = async () => {
+  try {
+    const response = await fetch(BASE_URL);
+    if (!response.ok) {
+      throw new Error('Failed to fetch offers');
+    }
+    const data = await response.json();
+    return data; 
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const offersDeleteAPI = async (id) => {
+  try {
+    const response = await fetch(`${BASE_URL}delete/${id}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete offer');
+    }
+
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const offersCreateAPI = async (item) => {
+  try {
+    const response = await fetch(`${BASE_URL}create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(item),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to create offer');
+    }
+
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+
+
+
+
+
+

@@ -13,11 +13,13 @@ import {
   DeleteImage,
   LoadingImage,
   TablePaginationStyle,
+  UpdateImage,
 } from "./CategoryContainer.styled";
 import { AddProductBtn } from "../Shared/AddProductBtn";
 import { Image } from "react-bootstrap";
 import { categoryAPI, categoryDeleteAPI } from "../../api/category";
 import DeleteIcon from "../../Image/icon/delete.svg";
+import UpdateIcon from "../../Image/icon/update-icon.svg";
 import LoadGif from "../../Image/icon/loading.gif";
 import Swal from "sweetalert2";
 import { ToastContainer, toast } from "react-toastify";
@@ -27,9 +29,7 @@ import { setCategory } from "../../store/slice/categorySlice";
 
 const columns = [
   { id: "id", label: "id", minWidth: 100, align: "center" },
-  { id: "image", label: "image", minWidth: 100, align: "center" },
   { id: "name", label: "name", minWidth: 170, align: "center" },
-  { id: "slug", label: "slug", minWidth: 170, align: "center" },
 ];
 
 export default function CategoryContainer() {
@@ -38,14 +38,16 @@ export default function CategoryContainer() {
 
   React.useEffect(() => {
     getCategory();
-  });
+  }, []);
 
-  const getCategory = () => {
-    categoryAPI
-      .then((res) => {
-        dispatch(setCategory(res.data.category));
-      })
-      .catch((err) => {});
+  const getCategory = async () => {
+    try {
+      const res = await categoryAPI(); 
+      dispatch(setCategory(res)); 
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching categories:", error);
+    }
   };
 
   const deleteCateory = (id) => {
@@ -75,6 +77,9 @@ export default function CategoryContainer() {
     });
   };
 
+
+  
+
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -87,7 +92,7 @@ export default function CategoryContainer() {
     setPage(0);
   };
 
-  if (!state.categorySlice.data[0]) {
+  if (!state.categorySlice.data || state.categorySlice.data.length === 0) {
     return <LoadingImage src={LoadGif} alt="loading" />;
   }
 
@@ -116,24 +121,28 @@ export default function CategoryContainer() {
                     {column.label.toUpperCase()}
                   </TableCell>
                 ))}
-                <TableCell align={"right"} cellwidth={"20"}></TableCell>
+                <TableCell align={"center"} cellwidth={"20"}>Update</TableCell>
+                <TableCell align={"center"} cellwidth={"20"}>Delete</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {state.categorySlice.data
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
+                .map((row, index) => {
                   return (
                     <TableRow
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      key={`table-${row.id}`}
+                      // key={`table-row-${row.id}`}
+                      key={index}
                     >
                       {columns.map((column) => {
                         const value = row[column.id];
+                        // console.log("Column ID:", column.id); // Log the column id to track when it's 'id'
+                        console.log("Value:", value); // Log the value to see if it's undefined
                         return (
-                          <TableCell key={column.id} align={column.align}>
+                          <TableCell key={`table-cell-${column.id}`} align={column.align}>
                             {column.id === "image" ? (
                               <Image
                                 width="60"
@@ -149,13 +158,22 @@ export default function CategoryContainer() {
                           </TableCell>
                         );
                       })}
+                      <TableCell key={`update-${row.id}`} align={"center"}>
+                        <UpdateImage
+                          onClick={() => deleteCateory(row.id)}
+                          src={UpdateIcon}
+                          width={ "20" }
+                          height={ "20" }
+                        />
+                      </TableCell>
 
-                      <TableCell key={row.id} align={"center"}>
+                      <TableCell key={`delete-${row.id}`} align={"center"}>
                         <DeleteImage
                           onClick={() => deleteCateory(row.id)}
                           src={DeleteIcon}
                         />
                       </TableCell>
+                      
                     </TableRow>
                   );
                 })}

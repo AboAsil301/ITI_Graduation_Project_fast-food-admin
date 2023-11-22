@@ -12,14 +12,16 @@ export default function SelectCategory() {
     getCategory();
   }, []);
 
-  const getCategory = () => {
-    categoryAPI
-      .then((res) => {
-        setCategory([...new Set(res.data.category.map((item) => item.name))]);
-      })
-      .catch((err) => {});
+  const getCategory = async () => {
+    try {
+      const res = await categoryAPI(); 
+      setCategory([...new Set(res.map((item) => item.name))]);
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching categories:", error);
+    }
   };
-
+  
   const handleChange = (event) => {
     setCat(event.target.value);
   };
@@ -37,11 +39,11 @@ export default function SelectCategory() {
           fontWeight: 500,
         }}
       >
-        <MenuItem value="All" selected>
+        <MenuItem value="All">
           Category type
         </MenuItem>
-        {category.map((item) => (
-          <MenuItem key={item} value={item} sx={{ fontSize: 14 }}>
+        {category.map((item, index) => (
+          <MenuItem key={index} value={item.name} sx={{ fontSize: 14 }}>
             {item}
           </MenuItem>
         ))}

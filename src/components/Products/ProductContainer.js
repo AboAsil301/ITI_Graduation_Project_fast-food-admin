@@ -17,12 +17,7 @@ import LoadGif from "../../Image/icon/loading.gif";
 import Swal from "sweetalert2";
 import { ToastContainer, toast } from "react-toastify";
 import DeleteIcon from "../../Image/icon/delete.svg";
-import {
-  CardContent,
-  Grid,
-  Pagination,
-  Typography,
-} from "@mui/material";
+import { CardContent, Grid, Pagination, Typography } from "@mui/material";
 import { productsAPI, productsDeleteAPI } from "../../api/products";
 import { Stack } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,25 +25,25 @@ import { setProducts } from "../../store/slice/productsSlice";
 import SelectCategory from "./SelectCategory";
 
 export default function ProductContainer() {
-
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
 
   React.useEffect(() => {
     getProduct();
-  });
+  }, [dispatch]);
 
-  const getProduct = () => {
-    productsAPI
-      .then((res) => {
-        dispatch(setProducts(res.data.products));
-      })
-      .catch((err) => {});
+  const getProduct = async () => {
+    try {
+      const res = await productsAPI();
+      dispatch(setProducts(res));
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
   };
 
   const deleteProduct = (id) => {
     Swal.fire({
-      title:"Are you sure it’s deleted ?",
+      title: "Are you sure it’s deleted ?",
       text: "Attention! If you delete this product, it will not come back...?",
       showCancelButton: true,
       cancelButtonColor: "transparent",
@@ -73,7 +68,7 @@ export default function ProductContainer() {
     });
   };
 
-  const [page, ] = React.useState(0);
+  const [page] = React.useState(0);
   // const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   // const handleChangePage = (event, newPage) => {
@@ -85,7 +80,14 @@ export default function ProductContainer() {
   //   setPage(0);
   // };
 
-  if (!state.productsSlice.data[0]) {
+  if (!state.productsSlice.data || state.productsSlice.data.length === 0) {
+    return <LoadingImage src={LoadGif} alt="loading" />;
+  }
+
+  if (
+    !Array.isArray(state.productsSlice.data) ||
+    state.productsSlice.data.length === 0
+  ) {
     return <LoadingImage src={LoadGif} alt="loading" />;
   }
 
@@ -113,62 +115,71 @@ export default function ProductContainer() {
         }}
       >
         {state.productsSlice.data.map((item) => {
-          return (
-            <Grid
-              key={item.id}
-              sx={{
-                width: 196,
-                height: 273,
-                background: "#FFFFFF",
-                boxShadow: "0px 4px 4px rgba(57, 57, 57, 0.25)",
-                borderRadius: "5px",
-                marginRight: 3,
-                marginBottom: 3,
-              }}
-            >
-              <ProductImageContainer>
-                <ProductImage src={item.image} alt={item.product_name} />
-              </ProductImageContainer>
-              <CardContent sx={{ display: "grid" }}>
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="span"
-                  sx={{ color: "#1E1E30", fontSize: 18 }}
-                >
-                  {item.product_name}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="#8E8E93"
-                  sx={{ fontSize: 14 }}
-                  component="span"
-                >
-                  {item.restaurant_name}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="#00B2A9"
-                  sx={{
-                    fontSize: 12,
-                    fontWeight: 500,
-                    display: "grid",
-                  }}
-                  component="span"
-                >
-                  <ProductPriceDelete sx={{ backgroundColor: "red" }}>
-                    <Price>${item.product_price}</Price>
-                    <DeleteImage
-                      size="small"
-                      onClick={() => deleteProduct(item.id)}
-                      src={DeleteIcon}
-                      alt="delete"
+          // Add a check to verify if the item and its image property are defined
+          if (item && item.image) {
+            return (
+              <Grid
+                key={item.id}
+                sx={{
+                  width: 196,
+                  height: 273,
+                  background: "#FFFFFF",
+                  boxShadow: "0px 4px 4px rgba(57, 57, 57, 0.25)",
+                  borderRadius: "5px",
+                  marginRight: 3,
+                  marginBottom: 3,
+                }}
+              >
+                <ProductImageContainer>
+                  {item.image && (
+                    <ProductImage
+                      src={`http://127.0.0.1:8000${item.image}`}
+                      alt={item.name}
                     />
-                  </ProductPriceDelete>
-                </Typography>
-              </CardContent>
-            </Grid>
-          );
+                  )}
+                </ProductImageContainer>
+                <CardContent sx={{ display: "grid" }}>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="span"
+                    sx={{ color: "#1E1E30", fontSize: 18 }}
+                  >
+                    {item.name}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="#8E8E93"
+                    sx={{ fontSize: 14 }}
+                    component="span"
+                  >
+                    {item.category}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="#00B2A9"
+                    sx={{
+                      fontSize: 12,
+                      fontWeight: 500,
+                      display: "grid",
+                    }}
+                    component="span"
+                  >
+                    <ProductPriceDelete sx={{ backgroundColor: "red" }}>
+                      <Price>${item.price}</Price>
+                      <DeleteImage
+                        size="small"
+                        onClick={() => deleteProduct(item.id)}
+                        src={DeleteIcon}
+                        alt="delete"
+                      />
+                    </ProductPriceDelete>
+                  </Typography>
+                </CardContent>
+              </Grid>
+            );
+          }
+          return null; // Skip rendering if the item or its image property is undefined
         })}
       </TableContainer>
       <Stack spacing={5} className="mt-5">
