@@ -121,18 +121,20 @@ export default function OfferContainer() {
             <TableBody>
               {state.offersSlice.data
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
+                .map((row, index) => {
                   return (
                     <TableRow
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      key={`table-${row.id}`}
+                      //key={`table-${row.id}`}
+                      key={{index}}
                     >
                       {columns.map((column) => {
-                        const value = row[column.id];
+                       const value = row[column.id];
+                      //  const value = row?.[column.id];// Add a null check for row[column.id]
                         return (
-                          <TableCell key={column.id} align={column.align}>
+                          <TableCell key={`table-cell-${column.id}`} align={column.align}>
                             {column.id === "image" ? (
                               <Image
                                 width="60"

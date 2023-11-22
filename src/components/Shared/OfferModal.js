@@ -30,13 +30,6 @@ import { ToastContainer, toast } from "react-toastify";
 export const OfferModal = (props) => {
   const [file, setFile] = React.useState();
 
-  // function handleChange(e) {
-  //   setFile(URL.createObjectURL(e.target.files[0]));
-  //   formik.values.image = URL.createObjectURL(e.target.files[0]) || "";
-  //   formik.errors.image = false;
-  //   return formik.values.image;
-  // }
-
   function handleChange(e) {
     const uploadedFile = e.target.files[0];
     setFile(URL.createObjectURL(uploadedFile));
@@ -66,22 +59,7 @@ export const OfferModal = (props) => {
       return errors;
     },
     onSubmit:async (values) => {
-      // let id = state.offersSlice.data.slice(-1)[0].id + 1;
-      // let item = {
-      //   id: id,
-      //   image: values.image,
-      //   startDate: values.startDate,
-      //   endDate: values.endDate,
-      // };
-
-
-      // offersCreateAPI(item)
-      //   .then((res) => {
-      //     let newArray = [...state.offersSlice.data, item];
-      //     dispatch(setOffers(newArray));
-      //   })
-      //   .catch(() => { });
-
+      
       try {
 
       // Make the API call to create the offer

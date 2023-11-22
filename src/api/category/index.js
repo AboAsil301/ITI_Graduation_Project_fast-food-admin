@@ -67,7 +67,7 @@ export const categoryDeleteAPI = async (id) => {
 
 export const categoryCreateAPI = async (cateName) => {
   try {
-    const response = await fetch(`${BASE_URL}add`, {
+    const response = await fetch(`${BASE_URL}new`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
