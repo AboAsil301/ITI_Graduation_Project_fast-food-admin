@@ -32,7 +32,11 @@ export default function ProductContainer() {
   const getProduct = async (pageNumber) => {
     try {
       const res = await productsAPI(pageNumber);
-      dispatch(setProducts(res));
+
+      if (res && res.results) {
+        dispatch(setProducts(res));
+      }
+     // dispatch(setProducts(res));
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -41,7 +45,7 @@ export default function ProductContainer() {
 
   React.useEffect(() => {
     getProduct(page);
-  }, [page]);
+  }, [page,state.productsSlice.data]);  // Include state changes that should trigger re-fetching
   
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
