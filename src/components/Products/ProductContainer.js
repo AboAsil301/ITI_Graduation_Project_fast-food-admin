@@ -90,13 +90,6 @@ export default function ProductContainer() {
     return <LoadingImage src={LoadGif} alt="loading" />;
   }
 
-  // if (
-  //   !Array.isArray(state.productsSlice.data) ||
-  //   state.productsSlice.data.length === 0
-  // ) {
-  //   return <LoadingImage src={LoadGif} alt="loading" />;
-  // }
-
   return (
     <ProductStyled>
       <ProductDiv>
@@ -126,8 +119,8 @@ export default function ProductContainer() {
               <Grid
                 key={item.id}
                 sx={{
-                  width: 200,
-                  height: 280,
+                  width: 196,
+                  height: 273,
                   background: "#FFFFFF",
                   boxShadow: "0px 4px 4px rgba(57, 57, 57, 0.25)",
                   borderRadius: "5px",
@@ -148,9 +141,13 @@ export default function ProductContainer() {
                     gutterBottom
                     variant="h5"
                     component="span"
-                    sx={{ color: "#1E1E30", fontSize: 16 }}
+                    sx={{ color: "#1E1E30", fontSize: 18 }}
                   >
-                    {item.name}
+                    {item.name.length > 15 ? (
+                      `${item.name.slice(0, 15)}...`
+                    ) : (
+                      item.name
+                    )}
                   </Typography>
                   <Typography
                     variant="body2"
@@ -171,7 +168,7 @@ export default function ProductContainer() {
                     component="span"
                   >
                     <ProductPriceDelete sx={{ backgroundColor: "red" }}>
-                      <Price>${item.price}</Price>
+                      <Price>{item.price} EGP</Price>
                       <DeleteImage
                         size="small"
                         onClick={() => deleteProduct(item.id)}
@@ -188,11 +185,13 @@ export default function ProductContainer() {
         })}
       </TableContainer>
       <Stack spacing={5} className="mt-5">
-        <Pagination
+        {/* <Pagination
           count={Math.ceil(state.productsSlice.count / 12)}
           color="primary"
           onChange={handleChangePage}
-        />
+        /> */}
+
+        <Pagination count={page || 1} color="primary"  onChange={handleChangePage}/>
       </Stack>
       <ToastContainer />
     </ProductStyled>
