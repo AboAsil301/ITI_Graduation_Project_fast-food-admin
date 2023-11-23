@@ -26,9 +26,22 @@ import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { setOffers } from "../../store/slice/offersSlice";
 import { ToastContainer, toast } from "react-toastify";
+import { offersAPI } from "../../api/offers";
+
+
 
 export const OfferModal = (props) => {
   const [file, setFile] = React.useState();
+
+  const getOffers = async () => {
+    try {
+      const res = await offersAPI(); 
+      dispatch(setOffers(res)); 
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching offers:", error);
+    }
+  };
 
   function handleChange(e) {
     const uploadedFile = e.target.files[0];
@@ -58,6 +71,9 @@ export const OfferModal = (props) => {
       }
       return errors;
     },
+
+
+    
     onSubmit:async (values) => {
       
       try {
@@ -74,6 +90,10 @@ export const OfferModal = (props) => {
         pauseOnHover: true,
       });
       props.closeFunc();
+      
+      // Fetch updated offers immediately after adding a new offer
+      getOffers();
+
     }catch (error) {
       toast.error("Failed to add offer");
     }
