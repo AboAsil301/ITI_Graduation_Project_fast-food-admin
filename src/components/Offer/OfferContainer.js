@@ -116,57 +116,68 @@ export default function OfferContainer() {
                   </TableCell>
                 ))}
                 <TableCell align={"center"} cellwidth={"20"}>Update</TableCell>
-                <TableCell align={"center"} cellwidth={"20"}>Delete</TableCell>              </TableRow>
+                <TableCell align={"center"} cellwidth={"20"}>Delete</TableCell>  
+              </TableRow>
             </TableHead>
+      
             <TableBody>
-              {state.offersSlice.data
-                ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      //key={`table-${row.id}`}
-                      key={{index}}
-                    >
-                      {columns.map((column) => {
-                       const value = row[column.id];
-                      //  const value = row?.[column.id];// Add a null check for row[column.id]
-                        return (
-                          <TableCell key={`table-cell-${column.id}`} align={column.align}>
-                            {column.id === "image" ? (
-                              <Image
-                                width="60"
-                                className="rounded"
-                                alt={column.id}
-                                src={`http://127.0.0.1:8000${value}`}
-                              />
-                            ) : (
-                              value
-                            )}
-                          </TableCell>
-                        );
-                      })}
+              {state.offersSlice.data?.length > 0 ? (
+                state.offersSlice.data
+                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={`table-row-${index}`}
+                      >
+                        {columns.map((column) => {
+                          const value = row?.[column.id];
+                          return (
+                            <TableCell
+                              key={`table-cell-${index}-${column.id}`} 
+                              align={column.align}
+                            >
+                              {column.id === "image" ? (
+                                <Image
+                                  width="60"
+                                  className="rounded"
+                                  alt={column.id}
+                                  src={`http://127.0.0.1:8000${value}`}
+                                />
+                              ) : (
+                                value
+                              )}
+                            </TableCell>
+                          );
+                        })}
 
-                      <TableCell key={`update-${row.id}`} align={"center"}>
-                        <UpdateImage
-                          onClick={() => deleteOffers(row.id)}
-                          src={UpdateIcon}
-                          width={"20"}
-                          height={"20"}
-                        />
-                      </TableCell>
+                        <TableCell key={`update-${index}`} align={"center"}>
+                          <UpdateImage
+                            onClick={() => deleteOffers(row.id)}
+                            src={UpdateIcon}
+                            width={"20"}
+                            height={"20"}
+                          />
+                        </TableCell>
 
-                      <TableCell key={row.id} align={"center"}>
-                        <DeleteImage
-                          onClick={() => deleteOffers(row.id)}
-                          src={DeleteIcon}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                        <TableCell key={`delete-${index}`} align={"center"}>
+                          <DeleteImage
+                            onClick={() => deleteOffers(row.id)}
+                            src={DeleteIcon}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length}>
+                    No data available
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>

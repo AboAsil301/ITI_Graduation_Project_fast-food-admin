@@ -82,7 +82,24 @@ export const offersCreateAPI = async (item) => {
 };
 
 
+// export const offersCreateAPI = async (newOfferData) => {
+//   try {
+//     const response = await offersCreateAPI(newOfferData);
+//     // Assuming the API returns the newly created offer
+//     const newOffer = await response.json();
 
+//     // Update the Redux state with the new offer
+//     dispatch(setOffers([...state.offersSlice.data, newOffer]));
+    
+//     toast.success("Offer added successfully!", {
+//       autoClose: 2000,
+//       pauseOnHover: true,
+//     });
+//   } catch (error) {
+//     console.error("Error adding offer:", error);
+//     toast.error("Failed to add offer");
+//   }
+// };
 
 
 
