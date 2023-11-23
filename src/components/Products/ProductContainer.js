@@ -27,6 +27,7 @@ import SelectCategory from "./SelectCategory";
 export default function ProductContainer() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
+  const [page, setPage] = React.useState(1);
 
   const getProduct = async (pageNumber) => {
     try {
@@ -39,8 +40,12 @@ export default function ProductContainer() {
 
 
   React.useEffect(() => {
-    getProduct();
-  }, [getProduct]);
+    getProduct(page);
+  }, [page]);
+  
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
 
   const deleteProduct = (id) => {
@@ -70,21 +75,6 @@ export default function ProductContainer() {
     });
   };
 
-  const [page, setPage] = React.useState(1);
-
-  const handleChangePage = (event, newPage) => {
-    // Ensure that the newPage is within a valid range
-    if (newPage >= 1) {
-      setPage(newPage);
-
-      // Check if there is a next page or previous page (not undefined)
-      if (state.productsSlice.next !== undefined) {
-        getProduct(newPage);
-      } else if (newPage > 1 && state.productsSlice.previous !== undefined) {
-        getProduct(newPage - 1); // Fetch the previous page
-      }
-    }
-  };
 
   if (!state.productsSlice.data || state.productsSlice.data.length === 0) {
     return <LoadingImage src={LoadGif} alt="loading" />;
@@ -185,13 +175,7 @@ export default function ProductContainer() {
         })}
       </TableContainer>
       <Stack spacing={5} className="mt-5">
-        {/* <Pagination
-          count={Math.ceil(state.productsSlice.count / 12)}
-          color="primary"
-          onChange={handleChangePage}
-        /> */}
-
-        <Pagination count={page || 1} color="primary"  onChange={handleChangePage}/>
+        <Pagination count={Math.ceil(state.productsSlice.count / 12) || 1} color="primary"  onChange={handleChangePage}/>
       </Stack>
       <ToastContainer />
     </ProductStyled>
