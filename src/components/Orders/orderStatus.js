@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   MenuItem,
+  Pagination,
   Paper,
   Select,
   Table,
@@ -20,11 +21,18 @@ const StatusPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { status } = useParams(); // Use useParams to get the status parameter
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1); // Add this line
 
-  const fetchOrdersByStatus = async () => {
+  const handlePageChange = (event, newPage) => {
+    setCurrentPage(newPage);
+    fetchOrdersByStatus(newPage);
+  };
+
+  const fetchOrdersByStatus = async (page = 1) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/orders/orders/?search=${status}&order=ordered_date`
+        `http://localhost:8000/orders/orders/?search=${status}&order=ordered_date&page=${page}`
       );
 
       if (!response.ok) {
@@ -37,6 +45,8 @@ const StatusPage = () => {
         (order) => order.ordered === true
       );
       setOrders(orderedOrders);
+      setTotalPages(data.total_pages); // Set total pages
+
       setLoading(false);
     } catch (error) {
       setError(error.message);
@@ -193,6 +203,20 @@ const StatusPage = () => {
             </Table>
           </TableContainer>
         </Paper>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "20px",
+          }}
+        >
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color="primary"
+          />
+        </div>
       </OrdersStyled>
     </div>
   );
