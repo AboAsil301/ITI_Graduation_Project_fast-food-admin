@@ -16,10 +16,22 @@ import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { setCategory } from "../../store/slice/categorySlice";
 import { ToastContainer, toast } from "react-toastify";
+import { categoryAPI } from "../../api/category";
+
 
 export const CategoryModal = (props) => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
+
+  const getCategory = async () => {
+    try {
+      const res = await categoryAPI(); 
+      dispatch(setCategory(res)); 
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching categories:", error);
+    }
+  };
 
 
   const formik = useFormik({
@@ -53,6 +65,10 @@ export const CategoryModal = (props) => {
           pauseOnHover: true,
         });
         props.closeFunc();
+
+        // Fetch updated categories immediately after adding a new category
+        getCategory();
+
       } catch (error) {
         toast.error("Failed to add category");
       }
