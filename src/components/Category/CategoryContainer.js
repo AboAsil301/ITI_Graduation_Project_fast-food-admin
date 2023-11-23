@@ -36,9 +36,7 @@ export default function CategoryContainer() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
 
-  React.useEffect(() => {
-    getCategory();
-  }, []);
+  
 
   const getCategory = async () => {
     try {
@@ -49,6 +47,10 @@ export default function CategoryContainer() {
       console.error("Error fetching categories:", error);
     }
   };
+
+  React.useEffect(() => {
+    getCategory();
+  }, [getCategory]);
 
   const deleteCateory = (id) => {
     Swal.fire({
@@ -126,7 +128,8 @@ export default function CategoryContainer() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {state.categorySlice.data
+              {state.categorySlice.data?.length > 0 ? (
+                state.categorySlice.data
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   return (
@@ -134,31 +137,19 @@ export default function CategoryContainer() {
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      // key={`table-row-${row.id}`}
-                      key={index}
+                      key={`table-row-${index}`}
                     >
                       {columns.map((column) => {
-                        const value = row[column.id];
-                        // console.log("Column ID:", column.id); // Log the column id to track when it's 'id'
-                        console.log("Value:", value); // Log the value to see if it's undefined
+                        const value = row?.[column.id];
                         return (
-                          <TableCell key={`table-cell-${column.id}`} align={column.align}>
-                            {column.id === "image" ? (
-                              <Image
-                                width="60"
-                                className="rounded"
-                                alt={column.id}
-                                src={value}
-                              />
-                            ) : value.length > 30 ? (
-                              `${value.slice(0, 30)}...`
-                            ) : (
-                              value
-                            )}
+                          <TableCell
+                          key={`table-cell-${index}-${column.id}`}
+                          align={column.align}>
+                            {value}
                           </TableCell>
                         );
                       })}
-                      <TableCell key={`update-${row.id}`} align={"center"}>
+                      <TableCell key={`update-${index}`} align={"center"}>
                         <UpdateImage
                           onClick={() => deleteCateory(row.id)}
                           src={UpdateIcon}
@@ -167,7 +158,7 @@ export default function CategoryContainer() {
                         />
                       </TableCell>
 
-                      <TableCell key={`delete-${row.id}`} align={"center"}>
+                      <TableCell key={`delete-${index}`} align={"center"}>
                         <DeleteImage
                           onClick={() => deleteCateory(row.id)}
                           src={DeleteIcon}
@@ -176,7 +167,13 @@ export default function CategoryContainer() {
                       
                     </TableRow>
                   );
-                })}
+                })):(
+                <TableRow>
+                  <TableCell colSpan={6} align="center">
+                    No data
+                  </TableCell>
+                </TableRow>
+                )}
             </TableBody>
           </Table>
         </TableContainer>

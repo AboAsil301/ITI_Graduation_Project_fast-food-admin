@@ -26,15 +26,27 @@ import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { setOffers } from "../../store/slice/offersSlice";
 import { ToastContainer, toast } from "react-toastify";
+import { offersAPI } from "../../api/offers";
+
+
 
 export const OfferModal = (props) => {
   const [file, setFile] = React.useState();
 
+  const getOffers = async () => {
+    try {
+      const res = await offersAPI(); 
+      dispatch(setOffers(res)); 
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching offers:", error);
+    }
+  };
+
   function handleChange(e) {
-    setFile(URL.createObjectURL(e.target.files[0]));
-    formik.values.image = URL.createObjectURL(e.target.files[0]) || "";
-    formik.errors.image = false;
-    return formik.values.image;
+    const uploadedFile = e.target.files[0];
+    setFile(URL.createObjectURL(uploadedFile));
+    formik.setFieldValue('image', uploadedFile); // Set file object directly in formik
   }
 
   const dispatch = useDispatch();
@@ -59,26 +71,33 @@ export const OfferModal = (props) => {
       }
       return errors;
     },
-    onSubmit: (values) => {
-      let id = state.offersSlice.data.slice(-1)[0].id + 1;
-      let item = {
-        id: id,
-        image: values.image,
-        startDate: values.startDate,
-        endDate: values.endDate,
-      };
-      offersCreateAPI(item)
-        .then((res) => {
-          let newArray = [...state.offersSlice.data, item];
-          dispatch(setOffers(newArray));
-        })
-        .catch(() => { });
+
+
+    
+    onSubmit:async (values) => {
+      
+      try {
+
+      // Make the API call to create the offer
+      const  createdOffer = await offersCreateAPI(values);
+    
+      // Update the state with the new offer if the API call was successful
+      const updatedOffers = [...state.offersSlice.data, createdOffer];
+      dispatch(setOffers(updatedOffers));
+    
       toast.success("Successfully added", {
         autoClose: 1000,
         pauseOnHover: true,
       });
       props.closeFunc();
-    },
+      
+      // Fetch updated offers immediately after adding a new offer
+      getOffers();
+
+    }catch (error) {
+      toast.error("Failed to add offer");
+    }
+  }
   });
 
   return (

@@ -27,19 +27,30 @@ import SelectCategory from "./SelectCategory";
 export default function ProductContainer() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
-
-  React.useEffect(() => {
-    getProduct();
-  }, [dispatch]);
+  const [page, setPage] = React.useState(1);
 
   const getProduct = async (pageNumber) => {
     try {
       const res = await productsAPI(pageNumber);
-      dispatch(setProducts(res));
+
+      if (res && res.results) {
+        dispatch(setProducts(res));
+      }
+     // dispatch(setProducts(res));
     } catch (error) {
       console.error("Error fetching products:", error);
     }
   };
+
+
+  React.useEffect(() => {
+    getProduct(page);
+  }, [page,state.productsSlice.data]);  // Include state changes that should trigger re-fetching
+  
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
 
   const deleteProduct = (id) => {
     Swal.fire({
@@ -68,30 +79,8 @@ export default function ProductContainer() {
     });
   };
 
-  const [page, setPage] = React.useState(1);
-
-  const handleChangePage = (event, newPage) => {
-    // Ensure that the newPage is within a valid range
-    if (newPage >= 1) {
-      setPage(newPage);
-
-      // Check if there is a next page or previous page (not undefined)
-      if (state.productsSlice.next !== undefined) {
-        getProduct(newPage);
-      } else if (newPage > 1 && state.productsSlice.previous !== undefined) {
-        getProduct(newPage - 1); // Fetch the previous page
-      }
-    }
-  };
 
   if (!state.productsSlice.data || state.productsSlice.data.length === 0) {
-    return <LoadingImage src={LoadGif} alt="loading" />;
-  }
-
-  if (
-    !Array.isArray(state.productsSlice.data) ||
-    state.productsSlice.data.length === 0
-  ) {
     return <LoadingImage src={LoadGif} alt="loading" />;
   }
 
@@ -124,8 +113,8 @@ export default function ProductContainer() {
               <Grid
                 key={item.id}
                 sx={{
-                  width: 200,
-                  height: 280,
+                  width: 196,
+                  height: 273,
                   background: "#FFFFFF",
                   boxShadow: "0px 4px 4px rgba(57, 57, 57, 0.25)",
                   borderRadius: "5px",
@@ -146,9 +135,13 @@ export default function ProductContainer() {
                     gutterBottom
                     variant="h5"
                     component="span"
-                    sx={{ color: "#1E1E30", fontSize: 16 }}
+                    sx={{ color: "#1E1E30", fontSize: 18 }}
                   >
-                    {item.name}
+                    {item.name.length > 15 ? (
+                      `${item.name.slice(0, 15)}...`
+                    ) : (
+                      item.name
+                    )}
                   </Typography>
                   <Typography
                     variant="body2"
@@ -169,7 +162,7 @@ export default function ProductContainer() {
                     component="span"
                   >
                     <ProductPriceDelete sx={{ backgroundColor: "red" }}>
-                      <Price>${item.price}</Price>
+                      <Price>{item.price} EGP</Price>
                       <DeleteImage
                         size="small"
                         onClick={() => deleteProduct(item.id)}
@@ -186,11 +179,7 @@ export default function ProductContainer() {
         })}
       </TableContainer>
       <Stack spacing={5} className="mt-5">
-        <Pagination
-          count={Math.ceil(state.productsSlice.count / 12)}
-          color="primary"
-          onChange={handleChangePage}
-        />
+        <Pagination count={Math.ceil(state.productsSlice.count / 12) || 1} color="primary"  onChange={handleChangePage}/>
       </Stack>
       <ToastContainer />
     </ProductStyled>

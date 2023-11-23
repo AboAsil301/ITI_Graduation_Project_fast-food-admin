@@ -63,12 +63,13 @@ export const offersDeleteAPI = async (id) => {
 
 export const offersCreateAPI = async (item) => {
   try {
-    const response = await fetch(`${BASE_URL}create`, {
+    const formData = new FormData();
+    formData.append('image', item.image);
+    formData.append('start_date', item.startDate);
+    formData.append('end_date', item.endDate);
+    const response = await fetch(`${BASE_URL}add`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(item),
+      body: formData,
     });
 
     if (!response.ok) {
@@ -79,10 +80,3 @@ export const offersCreateAPI = async (item) => {
     throw new Error(error.message);
   }
 };
-
-
-
-
-
-
-

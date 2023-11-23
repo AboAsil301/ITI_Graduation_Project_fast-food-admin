@@ -1,10 +1,9 @@
 import React from "react";
 import "./header.css";
-import adminIcon from "../../Image/icon/MyPhoto.png";
+import adminIcon from "../../Image/icon/avatar.png";
 import {
   Navbar,
 } from "reactstrap";
-
 
 const Header = () => {
   return (

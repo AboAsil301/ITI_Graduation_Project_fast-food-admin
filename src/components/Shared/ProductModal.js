@@ -29,6 +29,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "../../store/slice/productsSlice";
 import { ToastContainer, toast } from "react-toastify";
 import { categoryAPI } from '../../api/category/index';
+import { productsAPI } from "../../api/products";
+
 
 
 export const ProductModal = (props) => {
@@ -36,6 +38,15 @@ export const ProductModal = (props) => {
 
 
   const [category, setCategory] = React.useState(null);
+
+  const getProduct = async (pageNumber) => {
+    try {
+      const res = await productsAPI(pageNumber);
+      dispatch(setProducts(res));
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
 
   React.useEffect(() => {
     getCategory();
@@ -50,6 +61,8 @@ export const ProductModal = (props) => {
       console.error("Error fetching categories:", error);
     }
   };
+
+ 
 
   // function handleChange(e) {
   //   setFile(URL.createObjectURL(e.target.files[0]));
@@ -103,14 +116,7 @@ export const ProductModal = (props) => {
       }
 
       try {
-      // let newItem = {
-      //   image: values.image,
-      //   name: values.name,
-      //   description: values.description,
-      //   price: values.price,
-      //   category: values.category,
-      // };
-
+      
       // Make the API call to create the product
       const  createdProduct = await productsCreateAPI(values);
     
@@ -123,6 +129,9 @@ export const ProductModal = (props) => {
         pauseOnHover: true,
       });
       props.closeFunc();
+      
+      // Fetch updated products immediately after adding a new product
+      getProduct();
     }catch (error) {
       toast.error("Failed to add product");
     }
