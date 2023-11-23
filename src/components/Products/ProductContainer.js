@@ -28,10 +28,6 @@ export default function ProductContainer() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
 
-  React.useEffect(() => {
-    getProduct();
-  }, [dispatch]);
-
   const getProduct = async (pageNumber) => {
     try {
       const res = await productsAPI(pageNumber);
@@ -40,6 +36,12 @@ export default function ProductContainer() {
       console.error("Error fetching products:", error);
     }
   };
+
+
+  React.useEffect(() => {
+    getProduct();
+  }, [getProduct]);
+
 
   const deleteProduct = (id) => {
     Swal.fire({
@@ -88,12 +90,12 @@ export default function ProductContainer() {
     return <LoadingImage src={LoadGif} alt="loading" />;
   }
 
-  if (
-    !Array.isArray(state.productsSlice.data) ||
-    state.productsSlice.data.length === 0
-  ) {
-    return <LoadingImage src={LoadGif} alt="loading" />;
-  }
+  // if (
+  //   !Array.isArray(state.productsSlice.data) ||
+  //   state.productsSlice.data.length === 0
+  // ) {
+  //   return <LoadingImage src={LoadGif} alt="loading" />;
+  // }
 
   return (
     <ProductStyled>
