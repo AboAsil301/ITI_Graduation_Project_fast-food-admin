@@ -16,7 +16,7 @@ import {
   UpdateImage,
 } from "./CategoryContainer.styled";
 import { AddProductBtn } from "../Shared/AddProductBtn";
-import { Image } from "react-bootstrap";
+// import { Image } from "react-bootstrap";
 import { categoryAPI, categoryDeleteAPI } from "../../api/category";
 import DeleteIcon from "../../Image/icon/delete.svg";
 import UpdateIcon from "../../Image/icon/update-icon.svg";
@@ -50,7 +50,7 @@ export default function CategoryContainer() {
 
   React.useEffect(() => {
     getCategory();
-  }, [getCategory]);
+  }, []);
 
   const deleteCateory = (id) => {
     Swal.fire({

@@ -53,7 +53,7 @@ export default function OfferContainer() {
 
   React.useEffect(() => {
     getOffers();
-  }, [getOffers]);
+  }, []);
 
   const deleteOffers = (id) => {
     Swal.fire({

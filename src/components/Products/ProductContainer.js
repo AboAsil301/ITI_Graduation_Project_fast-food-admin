@@ -47,7 +47,6 @@ export default function ProductContainer() {
       if (res && res.results) {
         dispatch(setProducts(res));
       }
-      // dispatch(setProducts(res));
     } catch (error) {
       console.error("Error fetching products:", error);
     }
