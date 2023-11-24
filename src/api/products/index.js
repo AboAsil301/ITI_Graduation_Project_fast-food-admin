@@ -69,6 +69,7 @@ export const productsCreateAPI = async (item) => {
     formData.append("description", item.description);
     formData.append("price", item.price);
     formData.append("category", item.category);
+    formData.append("is_deleted","false");
     const response = await fetch(`${BASE_URL}new`, {
       method: "POST",
       body: formData,
