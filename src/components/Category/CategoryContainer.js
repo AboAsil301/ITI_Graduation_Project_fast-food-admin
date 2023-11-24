@@ -13,13 +13,15 @@ import {
   DeleteImage,
   LoadingImage,
   TablePaginationStyle,
-  UpdateImage,
+  // UpdateImage,
 } from "./CategoryContainer.styled";
 import { AddProductBtn } from "../Shared/AddProductBtn";
+import { UpdateProductBtn } from "../Shared/UpdateProductBtn";
+
 // import { Image } from "react-bootstrap";
 import { categoryAPI, categoryDeleteAPI } from "../../api/category";
 import DeleteIcon from "../../Image/icon/delete.svg";
-import UpdateIcon from "../../Image/icon/update-icon.svg";
+// import UpdateIcon from "../../Image/icon/update-icon.svg";
 import LoadGif from "../../Image/icon/loading.gif";
 import Swal from "sweetalert2";
 import { ToastContainer, toast } from "react-toastify";
@@ -133,40 +135,44 @@ export default function CategoryContainer() {
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={`table-row-${index}`}
-                    >
-                      {columns.map((column) => {
-                        const value = row?.[column.id];
-                        return (
-                          <TableCell
-                          key={`table-cell-${index}-${column.id}`}
-                          align={column.align}>
-                            {value}
-                          </TableCell>
-                        );
-                      })}
-                      <TableCell key={`update-${index}`} align={"center"}>
-                        <UpdateImage
+										<TableRow
+											hover
+											role="checkbox"
+											tabIndex={-1}
+											key={`table-row-${index}`}>
+											{columns.map((column) => {
+												const value = row?.[column.id];
+												return (
+													<TableCell
+														key={`table-cell-${index}-${column.id}`}
+														align={column.align}>
+														{value}
+													</TableCell>
+												);
+											})}
+											<TableCell key={`update-${index}`} align={"center"}>
+												{/* <UpdateImage
                           onClick={() => deleteCateory(row.id)}
                           src={UpdateIcon}
                           width={ "20" }
                           height={ "20" }
-                        />
-                      </TableCell>
+                        /> */}
 
-                      <TableCell key={`delete-${index}`} align={"center"}>
-                        <DeleteImage
-                          onClick={() => deleteCateory(row.id)}
-                          src={DeleteIcon}
-                        />
-                      </TableCell>
-                      
-                    </TableRow>
-                  );
+												<UpdateProductBtn
+													name="update category"
+													pagename="category"
+													placement="end"
+												/>
+											</TableCell>
+
+											<TableCell key={`delete-${index}`} align={"center"}>
+												<DeleteImage
+													onClick={() => deleteCateory(row.id)}
+													src={DeleteIcon}
+												/>
+											</TableCell>
+										</TableRow>
+									);
                 })):(
                 <TableRow>
                   <TableCell colSpan={6} align="center">

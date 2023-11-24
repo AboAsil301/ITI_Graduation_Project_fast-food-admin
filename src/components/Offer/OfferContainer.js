@@ -125,7 +125,6 @@ return (
               </TableCell>
             </TableRow>
           </TableHead>
-
           <TableBody>
             {state.offersSlice.data?.length > 0 ? (
               state.offersSlice.data
