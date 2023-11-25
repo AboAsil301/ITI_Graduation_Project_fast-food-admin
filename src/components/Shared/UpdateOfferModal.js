@@ -31,8 +31,7 @@ import { offersAPI } from "../../api/offers";
 
 
 export const UpdateOfferModal = (props) => {
-  const [file, setFile] = React.useState();
-
+  
   const getOffers = async () => {
     try {
       const res = await offersAPI(); 
@@ -100,6 +99,9 @@ export const UpdateOfferModal = (props) => {
   }
   });
 
+  const [file, setFile] = React.useState(`http://127.0.0.1:8000${props.productDetails.image }`|| '');
+
+    // Handle changes in the file input
   function handleChange(e) {
     const uploadedFile = e.target.files[0];
     setFile(URL.createObjectURL(uploadedFile));
