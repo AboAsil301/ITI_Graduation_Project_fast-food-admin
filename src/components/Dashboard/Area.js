@@ -86,7 +86,7 @@ function Area() {
     },
 
     title: {
-      text: "Total salary",
+      text: "Total Orders",
       align: "left",
       style: {
         fontSize: "20px",
