@@ -153,7 +153,7 @@ export default function ProductContainer() {
 										color="#8E8E93"
 										sx={{ fontSize: 14 }}
 										component="span">
-										{item.category.name}
+										{item.category_name}
 									</Typography>
 									<Typography
 										variant="body2"
