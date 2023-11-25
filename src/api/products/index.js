@@ -92,7 +92,7 @@ export const productsUpdateAPI = async (id, item) => {
     formData.append("description", item.description);
     formData.append("price", item.price);
     formData.append("category", item.category);
-    const response = await fetch(`${BASE_URL}update/${id}`, {
+    const response = await fetch(`${BASE_URL}edit/${id}`, {
       method: "PUT",
       body: formData,
     });

@@ -60,7 +60,7 @@ export const UpdateCategoryModal = (props) => {
         const updatedCategories = [...state.categorySlice.data, updatedCategory];
         dispatch(setCategory(updatedCategories));
     
-        toast.success("Successfully added", {
+        toast.success("Successfully updated", {
           autoClose: 1000,
           pauseOnHover: true,
         });
@@ -70,7 +70,7 @@ export const UpdateCategoryModal = (props) => {
         getCategory();
 
       } catch (error) {
-        toast.error("Failed to add category");
+        toast.error("Failed to update category");
       }
     }
     

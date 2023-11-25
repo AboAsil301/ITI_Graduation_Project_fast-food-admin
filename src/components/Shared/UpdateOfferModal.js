@@ -84,7 +84,7 @@ export const UpdateOfferModal = (props) => {
       const updatedOffers = [...state.offersSlice.data, UpdatedOffer];
       dispatch(setOffers(updatedOffers));
     
-      toast.success("Successfully added", {
+      toast.success("Successfully Updated", {
         autoClose: 1000,
         pauseOnHover: true,
       });
@@ -94,7 +94,7 @@ export const UpdateOfferModal = (props) => {
       getOffers();
 
     }catch (error) {
-      toast.error("Failed to add offer");
+      toast.error("Failed to update offer");
     }
   }
   });

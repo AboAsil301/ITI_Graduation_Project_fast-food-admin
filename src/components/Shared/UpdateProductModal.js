@@ -23,7 +23,7 @@ import {
   DataScroll,
 } from "./AddModal.styled";
 import UploadIcon from "../../Image/icon/upload.svg";
-import { productsCreateAPI } from "../../api/products";
+import {productsUpdateAPI} from "../../api/products";
 import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "../../store/slice/productsSlice";
@@ -108,15 +108,15 @@ export const UpdateProductModal = (props) => {
       }
 
       try {
-      
+      const id = props.productDetails.id
       // Make the API call to create the product
-      const  createdProduct = await productsCreateAPI(values);
+      const  UpdatedProduct = await productsUpdateAPI(id,values);
     
       // Update the state with the new product if the API call was successful
-      const updatedProducts = [...state.productsSlice.data, createdProduct];
+      const updatedProducts = [...state.productsSlice.data, UpdatedProduct];
       dispatch(setProducts(updatedProducts));
     
-      toast.success(("Successfully added"), {
+      toast.success(("Successfully Updated"), {
         autoClose: 1000,
         pauseOnHover: true,
       });
@@ -125,7 +125,7 @@ export const UpdateProductModal = (props) => {
       // Fetch updated products immediately after adding a new product
       getProduct();
     }catch (error) {
-      toast.error("Failed to add product");
+      toast.error("Failed to Update product");
     }
     }
   });
