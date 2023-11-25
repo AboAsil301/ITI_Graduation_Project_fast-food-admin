@@ -13,6 +13,7 @@ import {
   Price,
 } from "./ProductContainer.styled";
 import { AddProductBtn } from "../Shared/AddProductBtn";
+import { UpdateProductBtn } from "../Shared/UpdateProductBtn";
 import LoadGif from "../../Image/icon/loading.gif";
 import Swal from "sweetalert2";
 import { ToastContainer, toast } from "react-toastify";
@@ -152,14 +153,23 @@ export default function ProductContainer() {
 											display: "grid",
 										}}
 										component="span">
+
 										<ProductPriceDelete sx={{ backgroundColor: "red" }}>
 											<Price>{item.price} EGP</Price>
+											<UpdateProductBtn
+													name="update product"
+													pagename="products"
+													placement="end"
+													productDetails={item}
+													size="small"
+										/>
 											<DeleteImage
 												size="small"
 												onClick={() => deleteProduct(item.id)}
 												src={DeleteIcon}
 												alt="delete"
-											/>
+										 />
+											
 										</ProductPriceDelete>
 									</Typography>
 								</CardContent>
