@@ -29,18 +29,6 @@ export default function ProductContainer() {
   const state = useSelector((state) => state);
   const [page, setPage] = React.useState(1);
 
-  // const getProduct = async (pageNumber) => {
-  //   try {
-  //     const res = await productsAPI(pageNumber);
-
-  //     if (res && res.results) {
-  //       dispatch(setProducts(res));
-  //     }
-  //    // dispatch(setProducts(res));
-  //   } catch (error) {
-  //     console.error("Error fetching products:", error);
-  //   }
-  // };
   const getProduct = React.useCallback(async (pageNumber) => {
     try {
       const res = await productsAPI(pageNumber);
