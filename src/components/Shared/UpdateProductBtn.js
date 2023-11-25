@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import UpdateIcon from "../../Image/icon/update-icon.svg";
 import { UpdateCategoryModal } from "./UpdateCategoryModal";
-import { OfferModal } from "./OfferModal";
+import { UpdateOfferModal } from "./UpdateOfferModal";
 import { ProductModal } from "./ProductModal";
 import "./AddProductBtn.css";
 
@@ -45,10 +45,9 @@ export function UpdateProductBtn({ name, pagename, productDetails, ...props }) {
                 />
               ),
               offers: (
-                <OfferModal
+                <UpdateOfferModal
                   createname={"create " + pagename}
                   productDetails = {productDetails}
-
                   closeFunc={handleClose}
                 />
               ),

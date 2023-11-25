@@ -80,3 +80,23 @@ export const offersCreateAPI = async (item) => {
     throw new Error(error.message);
   }
 };
+
+export const offersUpdateAPI = async (id, item) => {
+  try {
+    const formData = new FormData();
+    formData.append('image', item.image);
+    formData.append('start_date', item.startDate);
+    formData.append('end_date', item.endDate);
+    const response = await fetch(`${BASE_URL}update/${id}`, {
+      method: 'PUT',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update offer');
+    }
+
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};

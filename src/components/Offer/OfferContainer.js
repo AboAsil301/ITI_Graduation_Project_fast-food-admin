@@ -16,6 +16,7 @@ import {
   UpdateImage,
 } from "./OfferContainer.styled";
 import { AddProductBtn } from "../Shared/AddProductBtn";
+import { UpdateProductBtn } from "../Shared/UpdateProductBtn";
 import { Image } from "react-bootstrap";
 import DeleteIcon from "../../Image/icon/delete.svg";
 import UpdateIcon from "../../Image/icon/update-icon.svg";
@@ -131,50 +132,55 @@ return (
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={`table-row-${index}`}
-                    >
-                      {columns.map((column) => {
-                        const value = row?.[column.id];
-                        return (
-                          <TableCell
-                            key={`table-cell-${index}-${column.id}`}
-                            align={column.align}
-                          >
-                            {column.id === "image" ? (
-                              <Image
-                                width="60"
-                                className="rounded"
-                                alt={column.id}
-                                src={`http://127.0.0.1:8000${value}`}
-                              />
-                            ) : (
-                              value
-                            )}
-                          </TableCell>
-                        );
-                      })}
+										<TableRow
+											hover
+											role="checkbox"
+											tabIndex={-1}
+											key={`table-row-${index}`}>
+											{columns.map((column) => {
+												const value = row?.[column.id];
+												return (
+													<TableCell
+														key={`table-cell-${index}-${column.id}`}
+														align={column.align}>
+														{column.id === "image" ? (
+															<Image
+																width="60"
+																className="rounded"
+																alt={column.id}
+																src={`http://127.0.0.1:8000${value}`}
+															/>
+														) : (
+															value
+														)}
+													</TableCell>
+												);
+											})}
 
-                      <TableCell key={`update-${index}`} align={"center"}>
-                        <UpdateImage
+											<TableCell key={`update-${index}`} align={"center"}>
+												{/* <UpdateImage
                           onClick={() => deleteOffers(row.id)}
                           src={UpdateIcon}
                           width={"20"}
                           height={"20"}
-                        />
-                      </TableCell>
+                        /> */}
 
-                      <TableCell key={`delete-${index}`} align={"center"}>
-                        <DeleteImage
-                          onClick={() => deleteOffers(row.id)}
-                          src={DeleteIcon}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
+												<UpdateProductBtn
+													name="update offer"
+													pagename="offers"
+													placement="end"
+													productDetails={row}
+												/>
+											</TableCell>
+
+											<TableCell key={`delete-${index}`} align={"center"}>
+												<DeleteImage
+													onClick={() => deleteOffers(row.id)}
+													src={DeleteIcon}
+												/>
+											</TableCell>
+										</TableRow>
+									);
                 })
             ) : (
               <TableRow>
