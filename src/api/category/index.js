@@ -83,3 +83,22 @@ export const categoryCreateAPI = async (cateName) => {
     throw new Error(error.message);
   }
 };
+
+export const categoryUpdateAPI = async (id, cateName) => {
+  try {
+    const response = await fetch(`${BASE_URL}edit/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ "name": cateName.name }),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to update category');
+    }
+    const data = await response.json();
+    return data.result; 
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};

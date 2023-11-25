@@ -162,6 +162,7 @@ export default function CategoryContainer() {
 													name="update category"
 													pagename="category"
 													placement="end"
+                          productDetails={row}
 												/>
 											</TableCell>
 

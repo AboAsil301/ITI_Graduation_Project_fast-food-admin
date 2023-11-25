@@ -11,7 +11,7 @@ import {
   DataLabel,
   DataTitle,
 } from "./AddModal.styled";
-import { categoryCreateAPI } from "../../api/category";
+import { categoryUpdateAPI } from "../../api/category";
 import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { setCategory } from "../../store/slice/categorySlice";
@@ -48,16 +48,16 @@ export const UpdateCategoryModal = (props) => {
 
     onSubmit: async (values) => {
       try {
-        // const id = state.categorySlice.data.slice(-1)[0].id + 1;
+        const id = props.productDetails.id
         const newItem = {
           name: values.name,
         };
     
-        // Make the API call to create the category
-        const createdCategory = await categoryCreateAPI(newItem);
+        // Make the API call to update the category
+        const updatedCategory = await categoryUpdateAPI(id,newItem);
     
         // Update the state with the new category if the API call was successful
-        const updatedCategories = [...state.categorySlice.data, createdCategory];
+        const updatedCategories = [...state.categorySlice.data, updatedCategory];
         dispatch(setCategory(updatedCategories));
     
         toast.success("Successfully added", {
@@ -84,7 +84,7 @@ export const UpdateCategoryModal = (props) => {
           <AddData>
             <DataLabel>Name</DataLabel>
             <DataInput
-              placeholder="Soup"
+              placeholder={props.productDetails && props.productDetails.name}
               id="name"
               name="name"
               type="text"
