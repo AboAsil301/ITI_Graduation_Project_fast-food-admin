@@ -127,7 +127,7 @@ export const SignInForm = styled.form`
 `
 export const SignInput = styled.input`
     padding: 15px 20px;
-    background-color: rgba(90, 91, 112, 1);
+    background-color: #27283C;
     border-radius: 4px;
     border: none;
     color: rgba(199, 199, 199, 1);

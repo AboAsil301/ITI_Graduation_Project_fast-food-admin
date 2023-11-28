@@ -29,7 +29,7 @@ const Content = ({ sidebarIsOpen, toggleSidebar }) => {
         <Route path="/panel/orders/pending" element={<Orders />} />
         <Route path="/panel/offer" element={<Offer />} />
         <Route path="/panel/messages" element={<Messages />} />
-        <Route path="/panel/dashboard" element={<Dashboard />} />
+        {/* <Route path="/panel/dashboard" element={<Dashboard />} /> */}
         <Route path="/orders/:status" element={<StatusPage />} />
       </Routes>
     </Container>

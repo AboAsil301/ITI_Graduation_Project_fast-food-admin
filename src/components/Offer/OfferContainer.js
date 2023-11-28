@@ -13,7 +13,6 @@ import {
   OffersSpan,
   OffersStyled,
   TablePaginationStyle,
-  UpdateImage,
 } from "./OfferContainer.styled";
 import { AddProductBtn } from "../Shared/AddProductBtn";
 import { UpdateProductBtn } from "../Shared/UpdateProductBtn";

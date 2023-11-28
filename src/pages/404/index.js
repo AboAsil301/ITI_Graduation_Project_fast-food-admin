@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 const Page404 = () => {
     return (
         <div className='container d-flex justify-content-center'>
-            <Link to="/panel/dashboard"><Btn404>Go back</Btn404></Link>
+            <Link to="/panel/products"><Btn404>Go back</Btn404></Link>
             <Img404 src={Image404} alt="404" />
         </div>
     )

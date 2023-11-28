@@ -1,7 +1,7 @@
 import React from "react";
 import "react-toastify/dist/ReactToastify.css";
 import loginImg from "../../Image/components/login.avif";
-import logoImg from "../../Image/logo/logo.svg";
+import logoImg from "../../Image/logo/logo3.png";
 import { ToastContainer, toast } from "react-toastify";
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
@@ -64,7 +64,7 @@ const LoginContainer = () => {
           localStorage.setItem("refresh", data.refresh);
           localStorage.setItem("isLogin", true);
           dispatch(setLogin(true));
-          navigate("/panel/dashboard"); // Update the redirect path if needed
+          navigate("/panel/Products"); // Update the redirect path if needed
         } else {
           toast.error("Invalid email or password", {
             autoClose: 2000,
@@ -83,7 +83,7 @@ const LoginContainer = () => {
   return (
     <LoginSection>
       <LogoDiv>
-        <img src={logoImg} alt="logo" />
+        <img src={logoImg} alt="logo" height={30} />
       </LogoDiv>
       <LoginDiv>
         <LoginForm>

@@ -88,13 +88,14 @@ export default function ProductContainer() {
 			<ProductDiv>
 				<ProductSpan>Products</ProductSpan>
 				<div className="right-side">
-					<SelectCategory />
-					<AddProductBtn
+					{/* <SelectCategory /> */}
+					
+				</div>
+				<AddProductBtn
 						name="Add product"
 						pagename="products"
 						placement="end"
 					/>
-				</div>
 			</ProductDiv>
 
 			<TableContainer
@@ -180,7 +181,6 @@ export default function ProductContainer() {
 				})}
 			</TableContainer>
 			<Stack spacing={5} className="mt-5">
-				{/* <Pagination count={Math.ceil(state.productsSlice.count / 12) || 1} color="primary"  onChange={handleChangePage}/> */}
 				<Pagination
 					count={Math.ceil(state.productsSlice.count / 12) || 1}
 					color="primary"

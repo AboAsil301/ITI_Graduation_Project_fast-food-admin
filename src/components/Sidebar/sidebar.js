@@ -4,14 +4,14 @@ import { useNavigate, Link } from "react-router-dom";
 import classNames from "classnames";
 import { setLogin } from "../../store/slice/loginSlice";
 import "./sidebar.css";
-import dashboardIcon from "../../Image/icon/dashboard.svg";
+// import dashboardIcon from "../../Image/icon/dashboard.svg";
 import productIcon from "../../Image/icon/product.svg";
 import offerIcon from "../../Image/icon/offer.svg";
 import orderIcon from "../../Image/icon/order.svg";
 import messaesIcon from "../../Image/icon/message-24.png";
 import categoryIcon from "../../Image/icon/category.svg";
 import logoutIcon from "../../Image/icon/logout.svg";
-import logo from "../../Image/logo/logo.svg";
+import logo from "../../Image/logo/logo3.png";
 import ITI_logo from "../../Image/logo/iti-logo.png";
 import Swal from "sweetalert2";
 
@@ -61,13 +61,13 @@ const SideBar = ({ isOpen, toggle }) => {
         </span>
       </div>
       <div className="sidebar-logo">
-        <img src={logo} alt="logo" />
+        <img src={logo} alt="logo"  height={30}/>
       </div>
       <div className="side-menu">
-        <Link to="/panel/dashboard">
+        {/* <Link to="/panel/dashboard">
           <img src={dashboardIcon} alt="Dashboard" />
           Dashboard
-        </Link>
+        </Link> */}
         <Link to="/panel/products">
           <img src={productIcon} alt="Products" />
           Products
