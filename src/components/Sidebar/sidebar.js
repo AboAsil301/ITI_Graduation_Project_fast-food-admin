@@ -61,7 +61,7 @@ const SideBar = ({ isOpen, toggle }) => {
         </span>
       </div>
       <div className="sidebar-logo">
-        <img src={logo} alt="logo"  height={30}/>
+        <img src={logo} alt="logo"  height={28}/>
       </div>
       <div className="side-menu">
         {/* <Link to="/panel/dashboard">
