@@ -151,13 +151,6 @@ export default function CategoryContainer() {
 												);
 											})}
 											<TableCell key={`update-${index}`} align={"center"}>
-												{/* <UpdateImage
-                          onClick={() => deleteCateory(row.id)}
-                          src={UpdateIcon}
-                          width={ "20" }
-                          height={ "20" }
-                        /> */}
-
 												<UpdateProductBtn
 													name="update category"
 													pagename="category"

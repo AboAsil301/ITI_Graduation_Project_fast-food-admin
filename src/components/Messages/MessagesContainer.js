@@ -14,22 +14,22 @@ import {
   MessagesStyled,
   TablePaginationStyle,
 } from "./MessagesContainer.styled";
-import { Image } from "react-bootstrap";
+// import { Image } from "react-bootstrap";
 import DeleteIcon from "../../Image/icon/delete.svg";
 import LoadGif from "../../Image/icon/loading.gif";
 import Swal from "sweetalert2";
 import { ToastContainer, toast } from "react-toastify";
-import { offersAPI } from "../../api/offers";
-import { offersDeleteAPI } from "../../api/offers";
-import { setOffers } from "../../store/slice/offersSlice";
+import { messagesAPI } from "../../api/messages";
+import { messagesDeleteAPI } from "../../api/messages";
+import { setMessages } from "../../store/slice/messagesSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const columns = [
-  { id: "Date", label: "Date", minWidth: 80, align: "center" },
+  { id: "created_at", label: "Date", minWidth: 80, align: "center" },
   { id: "name", label: "Name", minWidth: 80, align: "center" },
   { id: "email", label: "Email", minWidth: 150, align: "center" },
   { id: "phone", label: "Phone", minWidth: 80, align: "center" },
-  { id: "message", label: "Message", minWidth: 250, align: "center" },
+  { id: "text", label: "Message", minWidth: 250, align: "center" },
 ];
 
 export default function MessagesContainer() {
@@ -39,24 +39,24 @@ export default function MessagesContainer() {
 
 
 
-  const getOffers = async () => {
+  const getMessages = async () => {
     try {
-      const res = await offersAPI(); 
-      dispatch(setOffers(res)); 
+      const res = await messagesAPI(); 
+      dispatch(setMessages(res)); 
     } catch (error) {
       // Handle errors here
-      console.error("Error fetching offers:", error);
+      console.error("Error fetching messages:", error);
     }
   };
 
   React.useEffect(() => {
-    getOffers();
+    getMessages();
   }, []);
 
-  const deleteOffers = (id) => {
+  const deleteMessages = (id) => {
     Swal.fire({
       title: "Are you sure it’s deleted ?",
-      text: "Attention! If you delete this offer, it will not come back...?",
+      text: "Attention! If you delete this message, it will not come back...?",
       showCancelButton: true,
       cancelButtonColor: "transparent",
       cancelButtonText: "cancel",
@@ -64,10 +64,10 @@ export default function MessagesContainer() {
       confirmButtonText: "Delete",
     }).then((result) => {
       if (result.isConfirmed) {
-        offersDeleteAPI(id)
+        messagesDeleteAPI(id)
           .then((res) => {
-            let newArray = [...state.offersSlice.data].filter((item) => item.id !== id);
-            dispatch(setOffers(newArray));
+            let newArray = [...state.messagesSlice.data].filter((item) => item.id !== id);
+            dispatch(setMessages(newArray));
           })
           .catch(() => { });
         toast.success("The operation is successful!", {
@@ -90,15 +90,17 @@ export default function MessagesContainer() {
     setPage(0);
   };
 
-  if (!state.offersSlice.data[0]) {
+
+  if (!state.messagesSlice.data || state.messagesSlice.data.length === 0) {
     return <LoadingImage src={LoadGif} alt="loading" />;
   }
+
+
 
 return (
   <MessagesStyled className="category-page">
     <MessagesDiv>
       <MessagesSpan>Messages</MessagesSpan>
-      {/* <AddProductBtn name="add offer" pagename="offers" placement="end" /> */}
     </MessagesDiv>
 
     <Paper sx={{ width: "99%", boxShadow: "none" }}>
@@ -122,8 +124,8 @@ return (
             </TableRow>
           </TableHead>
           <TableBody>
-            {state.offersSlice.data?.length > 0 ? (
-              state.offersSlice.data
+            {state.messagesSlice.data?.length > 0 ? (
+              state.messagesSlice.data
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   return (
@@ -138,25 +140,13 @@ return (
 													<TableCell
 														key={`table-cell-${index}-${column.id}`}
 														align={column.align}>
-														{column.id === "image" ? (
-															<Image
-																width="60"
-																className="rounded"
-																alt={column.id}
-																src={`http://127.0.0.1:8000${value}`}
-															/>
-														) : (
-															value
-														)}
+                            {value}
 													</TableCell>
 												);
 											})}
-
-							
-
 											<TableCell key={`delete-${index}`} align={"center"}>
 												<DeleteImage
-													onClick={() => deleteOffers(row.id)}
+													onClick={() => deleteMessages(row.id)}
 													src={DeleteIcon}
 												/>
 											</TableCell>
@@ -176,7 +166,7 @@ return (
       <TablePaginationStyle
         rowsPerPageOptions={[10, 25, 50]}
         component="div"
-        count={state.offersSlice.data?.length}
+        count={state.messagesSlice.data?.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
